@@ -191,6 +191,71 @@
             border-left: 4px solid #3498db;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
+
+        .agenda-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .agenda-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+            font-size: 1.1em;
+        }
+
+        .agenda-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .methodology-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #3498db;
+        }
+
+        .conclusion-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .conclusion-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .next-steps {
+            background: #e8f4fd;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
     </style>
 </head>
 <body>
@@ -221,8 +286,58 @@
         </div>
     </div>
 
-    <!-- Slide 2: Resumen Ejecutivo -->
+    <!-- Slide 2: Agenda -->
     <div class="slide" id="slide2">
+        <div class="header">
+            <h2>📋 AGENDA DE LA PRESENTACIÓN</h2>
+        </div>
+        
+        <div class="agenda-grid">
+            <div class="agenda-item">
+                <span class="agenda-number">1</span>
+                Resumen Ejecutivo
+            </div>
+            <div class="agenda-item">
+                <span class="agenda-number">2</span>
+                Metodología del Análisis
+            </div>
+            <div class="agenda-item">
+                <span class="agenda-number">3</span>
+                Panorama General por Territorio
+            </div>
+            <div class="agenda-item">
+                <span class="agenda-number">4</span>
+                Análisis por Fenómenos DECDI
+            </div>
+            <div class="agenda-item">
+                <span class="agenda-number">5</span>
+                Impacto Económico
+            </div>
+            <div class="agenda-item">
+                <span class="agenda-number">6</span>
+                Mapas de Calor y Visualizaciones
+            </div>
+            <div class="agenda-item">
+                <span class="agenda-number">7</span>
+                Recomendaciones Estratégicas
+            </div>
+            <div class="agenda-item">
+                <span class="agenda-number">8</span>
+                Plan de Acción
+            </div>
+            <div class="agenda-item">
+                <span class="agenda-number">9</span>
+                Dashboard Propuesto
+            </div>
+            <div class="agenda-item">
+                <span class="agenda-number">10</span>
+                Conclusiones
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Resumen Ejecutivo -->
+    <div class="slide" id="slide3">
         <div class="header">
             <h2>📊 RESUMEN EJECUTIVO</h2>
         </div>
@@ -272,8 +387,50 @@
         </div>
     </div>
 
-    <!-- Slide 3: Panorama General -->
-    <div class="slide" id="slide3">
+    <!-- Slide 4: Metodología -->
+    <div class="slide" id="slide4">
+        <div class="header">
+            <h2>🔬 METODOLOGÍA DEL ANÁLISIS</h2>
+        </div>
+        
+        <div class="methodology-grid">
+            <div class="methodology-card">
+                <h3>📐 ALCANCE DEL ESTUDIO</h3>
+                <p>• 10 reportes territoriales procesados</p>
+                <p>• 9 departamentos analizados</p>
+                <p>• 26,873 casos individuales</p>
+                <p>• Período: 11-Sept al 03-Oct 2025</p>
+            </div>
+            
+            <div class="methodology-card">
+                <h3>📊 VARIABLES ANALIZADAS</h3>
+                <p>• Distribución por fenómeno DECDI</p>
+                <p>• Cuantías económicas identificadas</p>
+                <p>• Casos sobre umbral de 10 SMLV</p>
+                <p>• Modalidades específicas detectadas</p>
+                <p>• Eficiencia en clasificación</p>
+            </div>
+            
+            <div class="methodology-card">
+                <h3>🎯 ENFOQUE ANALÍTICO</h3>
+                <p>• Análisis comparativo territorial</p>
+                <p>• Identificación de patrones</p>
+                <p>• Priorización por impacto</p>
+                <p>• Recomendaciones basadas en datos</p>
+            </div>
+            
+            <div class="methodology-card">
+                <h3>📋 FUENTES DE DATOS</h3>
+                <p>• Reportes finales detallados</p>
+                <p>• Análisis por ubicación territorial</p>
+                <p>• Datos cuantitativos y cualitativos</p>
+                <p>• Métricas estandarizadas</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Panorama General -->
+    <div class="slide" id="slide5">
         <div class="header">
             <h2>🗺️ PANORAMA GENERAL TERRITORIAL</h2>
         </div>
@@ -326,17 +483,22 @@
                 </tr>
             </tbody>
         </table>
+
+        <div class="metric-card" style="margin-top: 20px;">
+            <strong>📈 DISTRIBUCIÓN NACIONAL DE CASOS</strong>
+            <p>MEDELLÍN: 52.5% | NARIÑO: 12.8% | TOLIMA: 12.5% | CAUCA: 11.5% | HUILA: 7.2% | OTROS: 3.5%</p>
+        </div>
     </div>
 
-    <!-- Slide 4: Distribución Fenómenos -->
-    <div class="slide" id="slide4">
+    <!-- Slide 6: Análisis Fenómenos DECDI -->
+    <div class="slide" id="slide6">
         <div class="header">
-            <h2>🔎 DISTRIBUCIÓN DE FENÓMENOS DECDI</h2>
+            <h2>🔎 ANÁLISIS POR FENÓMENOS DECDI</h2>
         </div>
         
         <div class="content-grid">
             <div>
-                <h3>Promedio Nacional</h3>
+                <h3>📊 Distribución Nacional</h3>
                 <div class="metric-card">
                     <strong>FENÓMENO C</strong>
                     <p>Suplantación masiva de identidad</p>
@@ -363,30 +525,45 @@
                     </div>
                     <strong>0.4%</strong>
                 </div>
+
+                <div class="metric-card">
+                    <strong>FENÓMENO A</strong>
+                    <p>Sabotaje a infraestructuras críticas</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0.2%"></div>
+                    </div>
+                    <strong>0.2%</strong>
+                </div>
             </div>
             
             <div>
-                <h3>Variaciones Territoriales</h3>
-                <div class="metric-card priority-high">
-                    <strong>MÁXIMO FENÓMENO C</strong>
-                    <p>Nariño: 98.1%</p>
+                <h3>🎯 FENÓMENO C - Análisis Detallado</h3>
+                <div class="metric-card">
+                    <strong>CARACTERÍSTICAS PRINCIPALES</strong>
+                    <p>• Modalidad C1: Suplantación masiva</p>
+                    <p>• Cobertura: 100% regiones afectadas</p>
+                    <p>• Persistencia: Patrón constante</p>
                 </div>
                 
-                <div class="metric-card priority-medium">
-                    <strong>MÍNIMO FENÓMENO C</strong>
-                    <p>Boyacá: 53.3%</p>
+                <div class="metric-card">
+                    <strong>ESTADÍSTICAS CLAVE</strong>
+                    <p>• Total casos: 21,190</p>
+                    <p>• Casos con cuantía: 45.2%</p>
+                    <p>• Casos > 10 SMLV: 4.3%</p>
                 </div>
                 
-                <div class="metric-card priority-high">
-                    <strong>MÁXIMO NO CLASIFICADO</strong>
-                    <p>Boyacá: 46.4%</p>
+                <div class="metric-card">
+                    <strong>VARIACIONES TERRITORIALES</strong>
+                    <p>• Máximo: Nariño (98.1%)</p>
+                    <p>• Mínimo: Boyacá (53.3%)</p>
+                    <p>• Promedio: 78.9%</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Slide 5: Impacto Económico -->
-    <div class="slide" id="slide5">
+    <!-- Slide 7: Impacto Económico -->
+    <div class="slide" id="slide7">
         <div class="header">
             <h2>💰 IMPACTO ECONÓMICO</h2>
         </div>
@@ -447,10 +624,10 @@
         </div>
     </div>
 
-    <!-- Slide 6: Mapa de Calor -->
-    <div class="slide" id="slide6">
+    <!-- Slide 8: Mapas de Calor -->
+    <div class="slide" id="slide8">
         <div class="header">
-            <h2>🎨 MAPA DE CALOR TERRITORIAL</h2>
+            <h2>🎨 MAPAS DE CALOR Y VISUALIZACIONES</h2>
         </div>
         
         <div class="content-grid">
@@ -494,12 +671,25 @@
                     <p>Alto porcentaje casos críticos</p>
                     <p>5.4% casos > 10 SMLV</p>
                 </div>
+
+                <h3>🟨 BAJA PRIORIDAD (Medio)</h3>
+                <div class="metric-card priority-low">
+                    <strong>📍 MAG</strong>
+                    <p>Menor escala pero patrones similares</p>
+                    <p>1,165 casos - $639.9M</p>
+                </div>
+
+                <div class="metric-card priority-low">
+                    <strong>🌿 PUTUMAYO</strong>
+                    <p>Menor escala pero patrones similares</p>
+                    <p>213 casos - $2.3M</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Slide 7: Recomendaciones -->
-    <div class="slide" id="slide7">
+    <!-- Slide 9: Recomendaciones Estratégicas -->
+    <div class="slide" id="slide9">
         <div class="header">
             <h2>🚀 RECOMENDACIONES ESTRATÉGICAS</h2>
         </div>
@@ -542,12 +732,17 @@
                     <strong>📋 PROTOCOLOS UNIFICADOS</strong>
                     <p>Respuesta estandarizada interregional</p>
                 </div>
+
+                <div class="metric-card">
+                    <strong>🔍 OPTIMIZACIÓN CLASIFICACIÓN</strong>
+                    <p>Reducir 17.8% casos no clasificados</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Slide 8: Plan de Acción -->
-    <div class="slide" id="slide8">
+    <!-- Slide 10: Plan de Acción -->
+    <div class="slide" id="slide10">
         <div class="header">
             <h2>📅 PLAN DE ACCIÓN 90 DÍAS</h2>
         </div>
@@ -558,6 +753,7 @@
                 <p>• Activación protocolos emergencia Medellín</p>
                 <p>• Comunicación interregional prioritaria</p>
                 <p>• Reforzamiento zonas críticas identificadas</p>
+                <p>• Establecimiento equipo respuesta rápida</p>
             </div>
             
             <div class="timeline-item">
@@ -565,6 +761,7 @@
                 <p>• Implementación medidas preventivas</p>
                 <p>• Capacitación masiva regional</p>
                 <p>• Sistema alertas tempranas operativo</p>
+                <p>• Monitoreo estrecho indicadores</p>
             </div>
             
             <div class="timeline-item">
@@ -572,6 +769,7 @@
                 <p>• Evaluación resultados primera fase</p>
                 <p>• Ajuste estrategias basado en métricas</p>
                 <p>• Réplica mejores prácticas nacional</p>
+                <p>• Planificación siguiente trimestre</p>
             </div>
         </div>
         
@@ -580,8 +778,8 @@
         </div>
     </div>
 
-    <!-- Slide 9: Dashboard Propuesto -->
-    <div class="slide" id="slide9">
+    <!-- Slide 11: Dashboard Propuesto -->
+    <div class="slide" id="slide11">
         <div class="header">
             <h2>📱 DASHBOARD DE MONITOREO</h2>
         </div>
@@ -633,74 +831,65 @@
                     <strong>⚡ TIEMPO RESPUESTA</strong>
                     <p>Meta: <24 horas por alerta</p>
                 </div>
+
+                <div class="metric-card">
+                    <strong>💰 IMPACTO ECONÓMICO</strong>
+                    <p>Meta: -25% pérdidas Q4 2025</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Slide 10: Cierre -->
-    <div class="slide" id="slide10">
+    <!-- Slide 12: Conclusiones -->
+    <div class="slide" id="slide12">
         <div class="header">
-            <h2>🚀 LISTOS PARA LA ACCIÓN</h2>
+            <h2>🎯 CONCLUSIONES</h2>
         </div>
         
-        <div class="content-grid">
-            <div>
-                <h3>✅ RECURSOS SOLICITADOS</h3>
-                <div class="metric-card">
-                    <strong>👥 EQUIPO ANÁLISIS</strong>
-                    <p>Dedicado exclusivo</p>
-                </div>
-                
-                <div class="metric-card">
-                    <strong>💻 PLATAFORMA TECNOLÓGICA</strong>
-                    <p>Dashboard monitoreo</p>
-                </div>
-                
-                <div class="metric-card">
-                    <strong>💰 PRESUPUESTO CAPACITACIÓN</strong>
-                    <p>Regional diferenciada</p>
-                </div>
-                
-                <div class="metric-card">
-                    <strong>🔐 AUTORIZACIÓN PROTOCOLOS</strong>
-                    <p>Emergencia prioritaria</p>
-                </div>
+        <div class="conclusion-grid">
+            <div class="conclusion-card">
+                <h3>✅ HALLAZGOS CONFIRMADOS</h3>
+                <p>• <strong>Consistencia territorial</strong>: Mismo patrón en todas las regiones</p>
+                <p>• <strong>Dominancia absoluta</strong>: Fenómeno C representa amenaza principal</p>
+                <p>• <strong>Escalabilidad</strong>: Problema crece con volumen poblacional</p>
+                <p>• <strong>Oportunidad</strong>: Datos permiten intervención precisa</p>
             </div>
             
-            <div>
-                <h3>🎯 COMPROMISOS</h3>
-                <div class="metric-card priority-high">
-                    <strong>CORTO PLAZO</strong>
-                    <p>Contención zonas críticas</p>
-                </div>
-                
-                <div class="metric-card priority-medium">
-                    <strong>MEDIANO PLAZO</strong>
-                    <p>Prevención nacional</p>
-                </div>
-                
-                <div class="metric-card priority-low">
-                    <strong>LARGO PLAZO</strong>
-                    <p>Erradicación patrones</p>
-                </div>
-                
-                <div class="metric-card" style="background: #d4edda; border-left-color: #27ae60; margin-top: 20px;">
-                    <strong>🎯 META PRINCIPAL</strong>
-                    <p style="font-size: 1.2em; font-weight: bold;">Reducción 25% impacto económico Q4 2025</p>
-                </div>
+            <div class="conclusion-card">
+                <h3>🔄 COMPROMISOS</h3>
+                <p>• <strong>Corto plazo</strong>: Contención zonas críticas</p>
+                <p>• <strong>Mediano plazo</strong>: Prevención nacional</p>
+                <p>• <strong>Largo plazo</strong>: Erradicación patrones</p>
+                <p>• <strong>Continua</strong>: Monitoreo y ajuste</p>
             </div>
+        </div>
+
+        <div class="next-steps">
+            <h3>📋 PRÓXIMOS PASOS INMEDIATOS</h3>
+            <p><strong>• 48 horas</strong>: Reunión equipos territoriales y activación protocolos emergencia</p>
+            <p><strong>• 2 semanas</strong>: Diseño detallado dashboard y plan capacitación regional</p>
+            <p><strong>• 1 mes</strong>: Implementación sistema alertas y evaluación primera fase</p>
+        </div>
+
+        <div class="metric-card" style="margin-top: 20px; background: #d4edda; border-left-color: #27ae60;">
+            <strong>🚀 LISTOS PARA LA IMPLEMENTACIÓN</strong>
+            <p style="font-size: 1.2em; font-weight: bold;">Reducción 25% impacto económico para Q4 2025</p>
         </div>
     </div>
 
     <!-- Controles de navegación -->
     <div class="controls">
         <button class="btn" onclick="prevSlide()">◀ Anterior</button>
+        <span style="color: white; margin: 0 15px;">Slide <span id="slide-counter">1</span>/12</span>
         <button class="btn" onclick="nextSlide()">Siguiente ▶</button>
     </div>
 
     <script>
         let currentSlide = 1;
-        const totalSlides = 10;
+        const totalSlides = 12;
         
         function showSlide(n) {
             // Ocultar todos los slides
@@ -711,6 +900,9 @@
             // Mostrar slide actual
             document.getElementById(`slide${n}`).classList.add('active');
             currentSlide = n;
+            
+            // Actualizar contador
+            document.getElementById('slide-counter').textContent = n;
         }
         
         function nextSlide() {
@@ -727,10 +919,17 @@
         
         // Navegación con teclado
         document.addEventListener('keydown', function(event) {
-            if (event.key === 'ArrowRight') {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
                 nextSlide();
             } else if (event.key === 'ArrowLeft') {
                 prevSlide();
+            }
+        });
+
+        // Navegación con click
+        document.addEventListener('click', function(event) {
+            if (!event.target.classList.contains('btn')) {
+                nextSlide();
             }
         });
         
