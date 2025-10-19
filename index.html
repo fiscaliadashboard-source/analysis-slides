@@ -135,6 +135,9 @@
             bottom: 30px;
             right: 30px;
             z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         
         .btn {
@@ -145,7 +148,6 @@
             border-radius: 50px;
             cursor: pointer;
             font-size: 16px;
-            margin: 0 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
         }
@@ -153,6 +155,20 @@
         .btn:hover {
             background: #2980b9;
             transform: translateY(-2px);
+        }
+
+        .btn-restart {
+            background: #27ae60;
+        }
+
+        .btn-restart:hover {
+            background: #219653;
+        }
+
+        .btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
         }
         
         .department-table {
@@ -255,6 +271,27 @@
             border-radius: 15px;
             margin: 20px 0;
             border-left: 4px solid #3498db;
+        }
+
+        .final-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .final-icon {
+            font-size: 4em;
+            margin-bottom: 30px;
+        }
+
+        .final-message {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            max-width: 600px;
         }
     </style>
 </head>
@@ -880,16 +917,48 @@
         </div>
     </div>
 
+    <!-- Slide 13: Final -->
+    <div class="slide" id="slide13">
+        <div class="final-slide">
+            <div class="final-icon">🎉</div>
+            <h2 style="color: #2c3e50; margin-bottom: 30px;">¡PRESENTACIÓN FINALIZADA!</h2>
+            
+            <div class="final-message">
+                <p>Gracias por revisar el análisis territorial de fenómenos DECDI.</p>
+                <p style="margin-top: 20px;">¿Listos para implementar las recomendaciones estratégicas?</p>
+            </div>
+            
+            <div class="metric-card" style="max-width: 500px; margin-top: 40px;">
+                <strong>📞 CONTACTO Y SEGUIMIENTO</strong>
+                <p>Departamento de Análisis Criminal Digital</p>
+                <p>analisis.decdi@organizacion.gov</p>
+                <p>Próxima revisión: Noviembre 2025</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Controles de navegación -->
     <div class="controls">
-        <button class="btn" onclick="prevSlide()">◀ Anterior</button>
-        <span style="color: white; margin: 0 15px;">Slide <span id="slide-counter">1</span>/12</span>
-        <button class="btn" onclick="nextSlide()">Siguiente ▶</button>
+        <button class="btn" id="prev-btn" onclick="prevSlide()">◀ Anterior</button>
+        <span style="color: white; margin: 0 15px;">Slide <span id="slide-counter">1</span>/13</span>
+        <button class="btn" id="next-btn" onclick="nextSlide()">Siguiente ▶</button>
+        <button class="btn btn-restart" id="restart-btn" onclick="restartPresentation()" style="display: none;">🔄 Reiniciar</button>
     </div>
 
     <script>
         let currentSlide = 1;
-        const totalSlides = 12;
+        const totalSlides = 13;
+        
+        function updateControls() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const restartBtn = document.getElementById('restart-btn');
+            
+            // Actualizar estado de botones
+            prevBtn.disabled = currentSlide === 1;
+            nextBtn.style.display = currentSlide === totalSlides ? 'none' : 'block';
+            restartBtn.style.display = currentSlide === totalSlides ? 'block' : 'none';
+        }
         
         function showSlide(n) {
             // Ocultar todos los slides
@@ -903,6 +972,9 @@
             
             // Actualizar contador
             document.getElementById('slide-counter').textContent = n;
+            
+            // Actualizar controles
+            updateControls();
         }
         
         function nextSlide() {
@@ -916,6 +988,10 @@
                 showSlide(currentSlide - 1);
             }
         }
+
+        function restartPresentation() {
+            showSlide(1);
+        }
         
         // Navegación con teclado
         document.addEventListener('keydown', function(event) {
@@ -923,18 +999,21 @@
                 nextSlide();
             } else if (event.key === 'ArrowLeft') {
                 prevSlide();
+            } else if (event.key === 'Home') {
+                restartPresentation();
             }
         });
 
-        // Navegación con click
+        // Navegación con click (solo si no es el último slide)
         document.addEventListener('click', function(event) {
-            if (!event.target.classList.contains('btn')) {
+            if (!event.target.classList.contains('btn') && currentSlide < totalSlides) {
                 nextSlide();
             }
         });
         
         // Inicializar
         showSlide(1);
+        updateControls();
     </script>
 </body>
 </html>
