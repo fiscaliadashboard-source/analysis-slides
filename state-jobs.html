@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Planta - DECDI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a3a8f 0%, #2c5aa0 100%);
+            color: #333;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        .slides-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            overflow-y: auto;
+        }
+        
+        .slide-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .slide-title {
+            color: #1a3a8f;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .slide-subtitle {
+            color: #2c5aa0;
+            font-size: 1.4rem;
+            font-weight: normal;
+        }
+        
+        .content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+        
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+            justify-content: center;
+        }
+        
+        .stat-card {
+            flex: 1;
+            min-width: 200px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border-left: 6px solid #1a3a8f;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1a3a8f;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: #666;
+        }
+        
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .chart {
+            flex: 1;
+            min-width: 400px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        
+        .bar-label {
+            width: 200px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .bar-value {
+            flex-grow: 1;
+            height: 30px;
+            background: linear-gradient(90deg, #1a3a8f, #2c5aa0);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+            color: white;
+            font-weight: bold;
+            min-width: 120px;
+        }
+        
+        .insight {
+            background: #e8f4fd;
+            border-left: 6px solid #2c5aa0;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .recommendation {
+            background: #f0f8f0;
+            border-left: 6px solid #28a745;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .cargo-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #1a3a8f;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .cargo-nombre {
+            font-weight: bold;
+            color: #1a3a8f;
+            font-size: 1.1rem;
+        }
+        
+        .tipo-nombramiento {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+        
+        .provisionalidad {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .propiedad {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .encargo {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .fechas {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 8px;
+        }
+        
+        .navegacion {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+        
+        .btn-nav {
+            background: #1a3a8f;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-nav:hover {
+            background: #2c5aa0;
+            transform: translateY(-2px);
+        }
+        
+        .btn-nav:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .indicadores {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .indicador {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .indicador.activo {
+            background: white;
+            transform: scale(1.2);
+        }
+        
+        h2 {
+            color: #1a3a8f;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #eaeaea;
+            font-size: 2.2rem;
+        }
+        
+        h3 {
+            color: #2c5aa0;
+            margin: 20px 0 15px;
+            font-size: 1.5rem;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .critical {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #ffd700 0%, #ffd700 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .encargo-item {
+            background: #fff3cd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #ffc107;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .encargo-nombre {
+            font-weight: bold;
+            color: #856404;
+            font-size: 1.1rem;
+        }
+        
+        .filtros-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .filtro-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filtro-label {
+            font-weight: bold;
+            color: #1a3a8f;
+            min-width: 120px;
+        }
+        
+        select {
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            background: white;
+            font-size: 1rem;
+            min-width: 300px;
+        }
+        
+        .resultados-filtro {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .persona-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #1a3a8f;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        
+        .persona-nombre {
+            font-weight: bold;
+            color: #1a3a8f;
+            font-size: 1.1rem;
+        }
+        
+        .persona-cargo {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .persona-detalle {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .grafica-cargos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .cargo-grafica-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-left: 4px solid #1a3a8f;
+        }
+        
+        .cargo-grafica-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .cargo-grafica-nombre {
+            font-weight: bold;
+            color: #1a3a8f;
+            font-size: 1rem;
+        }
+        
+        .cargo-grafica-total {
+            background: #1a3a8f;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .cargo-grafica-detalle {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .cargo-grafica-linea {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .cargo-grafica-tipo {
+            font-size: 0.9rem;
+        }
+        
+        .cargo-grafica-cantidad {
+            font-weight: bold;
+            color: #1a3a8f;
+        }
+        
+        .restart-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .todos-cargos-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .cargos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .cargo-completo-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-left: 4px solid #1a3a8f;
+        }
+        
+        .cargo-completo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .cargo-completo-nombre {
+            font-weight: bold;
+            color: #1a3a8f;
+            font-size: 1.1rem;
+            flex: 1;
+        }
+        
+        .cargo-completo-total {
+            background: #1a3a8f;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .cargo-completo-personas {
+            margin-top: 10px;
+        }
+        
+        .persona-cargo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .persona-cargo-nombre {
+            font-size: 0.9rem;
+            flex: 1;
+        }
+        
+        .persona-cargo-estado {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .search-section {
+            background: #e8f4fd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #1a3a8f;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <button class="restart-btn" onclick="irASlide(0)">Reiniciar Presentación</button>
+
+    <div class="slides-container" id="slidesContainer">
+        <!-- Slide 1: Portada -->
+        <div class="slide">
+            <div class="content">
+                <div class="slide-header">
+                    <h1 class="slide-title">Análisis de Planta de Personal</h1>
+                    <p class="slide-subtitle">Dirección Especializada contra los Delitos Informáticos (DECDI)</p>
+                    <p class="slide-subtitle">Fecha de corte: 16 de octubre de 2025</p>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-value">47</div>
+                        <div class="stat-label">Total de Funcionarios</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">91%</div>
+                        <div class="stat-label">Provisionalidad</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">60%</div>
+                        <div class="stat-label">Con Encargos Activos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Tipos de Nombramiento -->
+        <div class="slide">
+            <div class="content">
+                <h2>Tipos de Nombramiento</h2>
+                
+                <div class="chart-container">
+                    <div class="chart">
+                        <h3>Distribución por Tipo de Nombramiento</h3>
+                        <div class="bar">
+                            <div class="bar-label">PROVISIONALIDAD</div>
+                            <div class="bar-value" style="width: 91%;">43 (91%)</div>
+                        </div>
+                        <div class="bar">
+                            <div class="bar-label">PROPIEDAD</div>
+                            <div class="bar-value" style="width: 9%;">4 (9%)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insight">
+                    <h3>Hallazgo Crítico</h3>
+                    <p>Existe una <span class="highlight">alta proporción de provisionalidad (91%)</span> en la planta de personal de la DECDI. Solo 4 funcionarios (9%) tienen nombramiento en propiedad, lo que afecta la estabilidad laboral y la continuidad de los procesos.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Todos los Cargos Nominales -->
+        <div class="slide">
+            <div class="content">
+                <h2>Inventario de Cargos Nominales (NOM_CARGO)</h2>
+                <p>Lista completa de todos los cargos nominales existentes en la DECDI</p>
+                
+                <div class="search-section">
+                    <input type="text" class="search-input" id="searchCargos" placeholder="Buscar cargo específico..." onkeyup="filtrarCargos()">
+                    <div><small>Escriba para filtrar los cargos por nombre</small></div>
+                </div>
+                
+                <div class="todos-cargos-container">
+                    <div class="cargos-grid" id="cargosGrid">
+                        <!-- Los cargos se generan dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Encargos Activos -->
+        <div class="slide">
+            <div class="content">
+                <h2>Encargos Activos - Situación Crítica</h2>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-value">28</div>
+                        <div class="stat-label">Total de Encargos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">25</div>
+                        <div class="stat-label">En Provisionalidad</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">En Propiedad</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">89%</div>
+                        <div class="stat-label">Encargos en Provisionalidad</div>
+                    </div>
+                </div>
+
+                <div class="insight">
+                    <h3>Análisis de Encargos</h3>
+                    <p><span class="critical">89% de los encargos (25 de 28) son realizados por funcionarios en provisionalidad.</span> Esto representa un <span class="highlight">doble nivel de temporalidad</span> que afecta severamente la estabilidad organizacional.</p>
+                    <p><strong>Fecha máxima de encargo identificada: 2027-12-31</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Gráfica de Cargos -->
+        <div class="slide">
+            <div class="content">
+                <h2>Distribución de Cargos</h2>
+                <p>Análisis detallado de los cargos y su composición por tipo de nombramiento</p>
+                
+                <div class="grafica-cargos" id="graficaCargos">
+                    <!-- Los cargos se generan dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Filtros Interactivos -->
+        <div class="slide">
+            <div class="content">
+                <h2>Búsqueda de Personal</h2>
+                <p>Filtre el personal por cargo nominal o cargo de encargo</p>
+                
+                <div class="filtros-container">
+                    <div class="filtro-group">
+                        <div class="filtro-label">Cargo Nominal:</div>
+                        <select id="filtroCargo" onchange="aplicarFiltros()">
+                            <option value="">Todos los cargos</option>
+                            <!-- Opciones generadas dinámicamente -->
+                        </select>
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <div class="filtro-label">Cargo de Encargo:</div>
+                        <select id="filtroEncargo" onchange="aplicarFiltros()">
+                            <option value="">Todos los encargos</option>
+                            <!-- Opciones generadas dinámicamente -->
+                        </select>
+                    </div>
+                    
+                    <div class="resultados-filtro" id="resultadosFiltro">
+                        <!-- Resultados generados dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Recomendaciones -->
+        <div class="slide">
+            <div class="content">
+                <h2>Recomendaciones Estratégicas</h2>
+                
+                <div class="recommendation">
+                    <h3>Acciones Urgentes</h3>
+                    <ol>
+                        <li><strong>Implementar plan urgente de estabilización laboral</strong> para convertir provisionalidad a propiedad</li>
+                        <li><strong>Revisar inmediatamente la política de encargos</strong> para funcionarios en provisionalidad</li>
+                        <li><strong>Priorizar la propiedad en cargos críticos y de liderazgo</strong></li>
+                        <li><strong>Establecer límites temporales</strong> para encargos en personal provisional</li>
+                        <li><strong>Crear programa de retención</strong> para personal clave en provisionalidad</li>
+                        <li><strong>Evaluar reestructuración de planta</strong> para adecuarla a necesidades permanentes</li>
+                    </ol>
+                </div>
+
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-value">✓</div>
+                        <div class="stat-label">Estabilidad Laboral</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">✓</div>
+                        <div class="stat-label">Continuidad Operativa</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">✓</div>
+                        <div class="stat-label">Planificación Estratégica</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navegacion">
+        <button class="btn-nav" id="btnAnterior" onclick="cambiarSlide(-1)">Anterior</button>
+        <button class="btn-nav" id="btnSiguiente" onclick="cambiarSlide(1)">Siguiente</button>
+    </div>
+
+    <div class="indicadores" id="indicadores">
+        <!-- Los indicadores se generan automáticamente -->
+    </div>
+
+    <script>
+        // Datos completos basados en el archivo Excel proporcionado
+        const datosPersonas = [
+            { nombre: "Alvaro Salazar Avila", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Francisco Ignacio Pedraza Perez", cargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Jose Luis Lopez Bernal", cargo: "PROFESIONAL ESPECIALIZADO II", encargo: "PROFESIONAL EXPERTO", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Ana Marcela Moreno Guerrero", cargo: "ASISTENTE DE FISCAL II", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Luz Cecilia Garcia Cano", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROPIEDAD" },
+            { nombre: "Maria Gisella De La Trinidad Rivera Sefair", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Ingrid Lizeth Mantilla Rodriguez", cargo: "TECNICO II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Beatriz Eugenia Jaimes Reyes", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROPIEDAD" },
+            { nombre: "Giselle Carmona Sardoth", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Luz Mary Mosquera Arias", cargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Yineth Astrid Saavedra Corredor", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Rosa Ines Leiva Melo", cargo: "ASISTENTE DE FISCAL III", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Irsa Wandurraga Corzo", cargo: "PROFESIONAL ESPECIALIZADO II", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Gueryn Hernandez Espitia", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Maria Fernanda Jimenez Rubio", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL III", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Diana Marcela Rodriguez Monroy", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Yina Lorena Lopez Ramirez", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Erika Solangely Arias Ortiz", cargo: "SECRETARIO EJECUTIVO", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Diana Carolina Gonzalez Lizarazo", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Yadira Margarita Gavidia Bernal", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Maria Isabel Jimenez Garzon", cargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Diana Carolina Diaz Bernal", cargo: "ASISTENTE DE FISCAL I", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Angela Maria Estrada Espinosa", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Ingrid Patricia Vanegas De La Torre", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Maria Yaneth Manjarrez Orozco", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Adrian Gildardo Viana", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROPIEDAD" },
+            { nombre: "Juan Carlos Diaz Hernandez", cargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Jorge Enrique Maldonado Camargo", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Danny Efrain Rubio Cabrejo", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Edgar Mauricio Bolaños Macias", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Harold Giovanni Rincon Aguiar", cargo: "ASISTENTE DE FISCAL III", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Diego Hernando Manosalva Agredo", cargo: "PROFESIONAL DE GESTION III", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Vicente Muñoz Diaz", cargo: "SECRETARIO ADMINISTRATIVO I", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Paula Valeria Gomez Duarte", cargo: "SECRETARIO ADMINISTRATIVO I", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Erika Natalia Betancourt Martinez", cargo: "SECRETARIO ADMINISTRATIVO I", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Daniela Alejandra Lozada Bayona", cargo: "ASISTENTE DE FISCAL II", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Francy Lorena Betancourth Gutierrez", cargo: "SECRETARIO EJECUTIVO", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "David Fernando Vasquez Osorio", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Natalia Cabrera Trujillo", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Victor Julio Junior Cruz Rozo", cargo: "PROFESIONAL INVESTIGADOR II", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Julieth Tatiana Garzon Contreras", cargo: "ASISTENTE DE FISCAL II", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Sebastian Avila Rodriguez", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL III", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Juan Jose Arteaga Muñoz", cargo: "ASISTENTE DE FISCAL IV", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Maria Lucia Mier Goyes", cargo: "PROFESIONAL DE GESTION II", encargo: "PROFESIONAL ESPECIALIZADO II", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Carlos Eduardo Portilla Velasco", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Martha Johanna Barbosa Medina", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Leivy Carolina Pérez Torres", cargo: "ASISTENTE DE FISCAL II", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Maribel Andrea Castiblanco Velez", cargo: "ASISTENTE DE FISCAL I", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Laura Cristina Lozano Varon", cargo: "ASISTENTE DE FISCAL I", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Valentina Peñaranda Hincapie", cargo: "ASISTENTE DE FISCAL IV", encargo: "", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Fredy Enrique Henao Yepez", cargo: "TECNICO II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
+            { nombre: "Douglas Stevenson Sosa Vanegas", cargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", encargo: "", nombramiento: "PROPIEDAD" },
+            { nombre: "Lenar Armando Colmenares Duque", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" }
+        ];
+
+        let slideActual = 0;
+        const totalSlides = document.querySelectorAll('.slide').length;
+        const slidesContainer = document.getElementById('slidesContainer');
+        const indicadores = document.getElementById('indicadores');
+        const btnAnterior = document.getElementById('btnAnterior');
+        const btnSiguiente = document.getElementById('btnSiguiente');
+
+        // Generar indicadores
+        for (let i = 0; i < totalSlides; i++) {
+            const indicador = document.createElement('div');
+            indicador.className = 'indicador' + (i === 0 ? ' activo' : '');
+            indicador.onclick = () => irASlide(i);
+            indicadores.appendChild(indicador);
+        }
+
+        function cambiarSlide(direccion) {
+            const nuevoSlide = slideActual + direccion;
+            if (nuevoSlide >= 0 && nuevoSlide < totalSlides) {
+                irASlide(nuevoSlide);
+            } else if (nuevoSlide >= totalSlides) {
+                // Si es el último slide, reiniciar al principio
+                irASlide(0);
+            }
+        }
+
+        function irASlide(nuevoSlide) {
+            slideActual = nuevoSlide;
+            slidesContainer.style.transform = `translateX(-${slideActual * 100}vw)`;
+            
+            // Actualizar indicadores
+            document.querySelectorAll('.indicador').forEach((ind, index) => {
+                ind.classList.toggle('activo', index === slideActual);
+            });
+            
+            // Actualizar estado de botones
+            btnAnterior.disabled = slideActual === 0;
+            btnSiguiente.textContent = slideActual === totalSlides - 1 ? 'Reiniciar' : 'Siguiente';
+            
+            // Si estamos en slides que requieren procesamiento de datos
+            if (slideActual === 2) { // Slide de todos los cargos
+                generarTodosLosCargos();
+            } else if (slideActual === 4) { // Slide de gráfica de cargos
+                generarGraficaCargos();
+            } else if (slideActual === 5) { // Slide de filtros
+                inicializarFiltros();
+            }
+        }
+
+        // Navegación con teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') cambiarSlide(-1);
+            if (e.key === 'ArrowRight') cambiarSlide(1);
+        });
+
+        // Funciones para mostrar todos los cargos nominales
+        function generarTodosLosCargos() {
+            const contenedor = document.getElementById('cargosGrid');
+            contenedor.innerHTML = '';
+            
+            // Agrupar por cargo
+            const cargos = {};
+            datosPersonas.forEach(persona => {
+                if (!cargos[persona.cargo]) {
+                    cargos[persona.cargo] = {
+                        personas: [],
+                        total: 0,
+                        provisionalidad: 0,
+                        propiedad: 0,
+                        conEncargo: 0
+                    };
+                }
+                
+                cargos[persona.cargo].personas.push(persona);
+                cargos[persona.cargo].total++;
+                if (persona.nombramiento === 'PROVISIONALIDAD') {
+                    cargos[persona.cargo].provisionalidad++;
+                } else {
+                    cargos[persona.cargo].propiedad++;
+                }
+                
+                if (persona.encargo) {
+                    cargos[persona.cargo].conEncargo++;
+                }
+            });
+            
+            // Generar elementos para cada cargo
+            Object.entries(cargos).forEach(([cargo, datos]) => {
+                const elemento = document.createElement('div');
+                elemento.className = 'cargo-completo-item';
+                elemento.dataset.cargo = cargo.toLowerCase();
+                
+                elemento.innerHTML = `
+                    <div class="cargo-completo-header">
+                        <div class="cargo-completo-nombre">${cargo}</div>
+                        <div class="cargo-completo-total">${datos.total}</div>
+                    </div>
+                    <div class="cargo-completo-personas">
+                        ${datos.personas.map(persona => `
+                            <div class="persona-cargo-item">
+                                <div class="persona-cargo-nombre">${persona.nombre}</div>
+                                <div class="persona-cargo-estado">
+                                    <span class="tipo-nombramiento ${persona.nombramiento === 'PROVISIONALIDAD' ? 'provisionalidad' : 'propiedad'}">
+                                        ${persona.nombramiento}
+                                    </span>
+                                    ${persona.encargo ? 
+                                        `<span class="tipo-nombramiento encargo">ENCARGO</span>` : 
+                                        ''
+                                    }
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                contenedor.appendChild(elemento);
+            });
+        }
+
+        function filtrarCargos() {
+            const searchTerm = document.getElementById('searchCargos').value.toLowerCase();
+            const elementosCargo = document.querySelectorAll('.cargo-completo-item');
+            
+            elementosCargo.forEach(elemento => {
+                const cargo = elemento.dataset.cargo;
+                if (cargo.includes(searchTerm)) {
+                    elemento.style.display = 'block';
+                } else {
+                    elemento.style.display = 'none';
+                }
+            });
+        }
+
+        // Funciones para la gráfica de cargos
+        function generarGraficaCargos() {
+            const contenedor = document.getElementById('graficaCargos');
+            contenedor.innerHTML = '';
+            
+            // Agrupar por cargo
+            const cargos = {};
+            datosPersonas.forEach(persona => {
+                if (!cargos[persona.cargo]) {
+                    cargos[persona.cargo] = {
+                        total: 0,
+                        provisionalidad: 0,
+                        propiedad: 0,
+                        conEncargo: 0
+                    };
+                }
+                
+                cargos[persona.cargo].total++;
+                if (persona.nombramiento === 'PROVISIONALIDAD') {
+                    cargos[persona.cargo].provisionalidad++;
+                } else {
+                    cargos[persona.cargo].propiedad++;
+                }
+                
+                if (persona.encargo) {
+                    cargos[persona.cargo].conEncargo++;
+                }
+            });
+            
+            // Generar elementos de gráfica
+            Object.entries(cargos).forEach(([cargo, datos]) => {
+                const elemento = document.createElement('div');
+                elemento.className = 'cargo-grafica-item';
+                
+                elemento.innerHTML = `
+                    <div class="cargo-grafica-header">
+                        <div class="cargo-grafica-nombre">${cargo}</div>
+                        <div class="cargo-grafica-total">${datos.total}</div>
+                    </div>
+                    <div class="cargo-grafica-detalle">
+                        <div class="cargo-grafica-linea">
+                            <div class="cargo-grafica-tipo">Provisionalidad</div>
+                            <div class="cargo-grafica-cantidad">${datos.provisionalidad}</div>
+                        </div>
+                        <div class="cargo-grafica-linea">
+                            <div class="cargo-grafica-tipo">Propiedad</div>
+                            <div class="cargo-grafica-cantidad">${datos.propiedad}</div>
+                        </div>
+                        <div class="cargo-grafica-linea">
+                            <div class="cargo-grafica-tipo">Con Encargo</div>
+                            <div class="cargo-grafica-cantidad">${datos.conEncargo}</div>
+                        </div>
+                    </div>
+                `;
+                
+                contenedor.appendChild(elemento);
+            });
+        }
+
+        // Funciones para los filtros
+        function inicializarFiltros() {
+            const selectCargo = document.getElementById('filtroCargo');
+            const selectEncargo = document.getElementById('filtroEncargo');
+            
+            // Obtener opciones únicas de cargos
+            const cargos = [...new Set(datosPersonas.map(p => p.cargo))];
+            const encargos = [...new Set(datosPersonas.map(p => p.encargo).filter(e => e))];
+            
+            // Llenar select de cargos
+            cargos.forEach(cargo => {
+                const option = document.createElement('option');
+                option.value = cargo;
+                option.textContent = cargo;
+                selectCargo.appendChild(option);
+            });
+            
+            // Llenar select de encargos
+            encargos.forEach(encargo => {
+                const option = document.createElement('option');
+                option.value = encargo;
+                option.textContent = encargo;
+                selectEncargo.appendChild(option);
+            });
+            
+            // Aplicar filtros iniciales
+            aplicarFiltros();
+        }
+
+        function aplicarFiltros() {
+            const filtroCargo = document.getElementById('filtroCargo').value;
+            const filtroEncargo = document.getElementById('filtroEncargo').value;
+            const resultados = document.getElementById('resultadosFiltro');
+            
+            // Filtrar personas
+            const personasFiltradas = datosPersonas.filter(persona => {
+                const coincideCargo = !filtroCargo || persona.cargo === filtroCargo;
+                const coincideEncargo = !filtroEncargo || persona.encargo === filtroEncargo;
+                return coincideCargo && coincideEncargo;
+            });
+            
+            // Mostrar resultados
+            resultados.innerHTML = '';
+            
+            if (personasFiltradas.length === 0) {
+                resultados.innerHTML = '<p>No se encontraron resultados con los filtros aplicados.</p>';
+                return;
+            }
+            
+            personasFiltradas.forEach(persona => {
+                const elemento = document.createElement('div');
+                elemento.className = 'persona-item';
+                
+                elemento.innerHTML = `
+                    <div class="persona-nombre">${persona.nombre}</div>
+                    <div class="persona-cargo">Cargo: ${persona.cargo}</div>
+                    <div class="persona-detalle">
+                        <span class="tipo-nombramiento ${persona.nombramiento === 'PROVISIONALIDAD' ? 'provisionalidad' : 'propiedad'}">
+                            ${persona.nombramiento}
+                        </span>
+                        ${persona.encargo ? 
+                            `<span class="tipo-nombramiento encargo">Encargo: ${persona.encargo}</span>` : 
+                            '<span>Sin encargo activo</span>'
+                        }
+                    </div>
+                `;
+                
+                resultados.appendChild(elemento);
+            });
+        }
+
+        // Inicializar
+        irASlide(0);
+    </script>
+</body>
+</html>
