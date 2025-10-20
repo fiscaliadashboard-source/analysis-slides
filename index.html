@@ -293,6 +293,41 @@
             margin-bottom: 40px;
             max-width: 600px;
         }
+
+        .case-distribution {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .distribution-chart {
+            display: flex;
+            justify-content: center;
+            align-items: end;
+            height: 200px;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .chart-bar {
+            width: 60px;
+            background: linear-gradient(to top, #3498db, #2ecc71);
+            border-radius: 5px 5px 0 0;
+            position: relative;
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-weight: bold;
+            color: #2c3e50;
+        }
     </style>
 </head>
 <body>
@@ -311,9 +346,9 @@
                 <div>9 departamentos</div>
             </div>
             <div class="stat-card">
-                <div>💰 Impacto Económico</div>
-                <div class="stat-number">$607B</div>
-                <div>Pérdidas identificadas</div>
+                <div>🔍 Casos Críticos</div>
+                <div class="stat-number">1,158</div>
+                <div>> 10 SMLV</div>
             </div>
             <div class="stat-card">
                 <div>🔴 Fenómeno Dominante</div>
@@ -348,11 +383,11 @@
             </div>
             <div class="agenda-item">
                 <span class="agenda-number">5</span>
-                Impacto Económico
+                Distribución de Casos
             </div>
             <div class="agenda-item">
                 <span class="agenda-number">6</span>
-                Mapas de Calor y Visualizaciones
+                Mapas de Calor y Priorización
             </div>
             <div class="agenda-item">
                 <span class="agenda-number">7</span>
@@ -364,7 +399,7 @@
             </div>
             <div class="agenda-item">
                 <span class="agenda-number">9</span>
-                Dashboard Propuesto
+                Sistema de Monitoreo
             </div>
             <div class="agenda-item">
                 <span class="agenda-number">10</span>
@@ -396,8 +431,8 @@
                 </div>
                 
                 <div class="metric-card">
-                    <strong>IMPACTO ECONÓMICO MASIVO</strong>
-                    <p>$607 Billones en pérdidas identificadas</p>
+                    <strong>CONCENTRACIÓN TERRITORIAL</strong>
+                    <p>3 departamentos concentran 77.8% de casos</p>
                 </div>
             </div>
             
@@ -442,17 +477,17 @@
             <div class="methodology-card">
                 <h3>📊 VARIABLES ANALIZADAS</h3>
                 <p>• Distribución por fenómeno DECDI</p>
-                <p>• Cuantías económicas identificadas</p>
                 <p>• Casos sobre umbral de 10 SMLV</p>
                 <p>• Modalidades específicas detectadas</p>
                 <p>• Eficiencia en clasificación</p>
+                <p>• Distribución territorial</p>
             </div>
             
             <div class="methodology-card">
                 <h3>🎯 ENFOQUE ANALÍTICO</h3>
                 <p>• Análisis comparativo territorial</p>
                 <p>• Identificación de patrones</p>
-                <p>• Priorización por impacto</p>
+                <p>• Priorización por volumen e impacto</p>
                 <p>• Recomendaciones basadas en datos</p>
             </div>
             
@@ -460,8 +495,8 @@
                 <h3>📋 FUENTES DE DATOS</h3>
                 <p>• Reportes finales detallados</p>
                 <p>• Análisis por ubicación territorial</p>
-                <p>• Datos cuantitativos y cualitativos</p>
-                <p>• Métricas estandarizadas</p>
+                <p>• Datos cuantitativos estandarizados</p>
+                <p>• Métricas de clasificación</p>
             </div>
         </div>
     </div>
@@ -478,7 +513,7 @@
                     <th>Departamento</th>
                     <th>Total Casos</th>
                     <th>% Fenómeno C</th>
-                    <th>Cuantía Total</th>
+                    <th>Casos Críticos</th>
                     <th>Prioridad</th>
                 </tr>
             </thead>
@@ -487,35 +522,35 @@
                     <td>🏙️ Medellín</td>
                     <td>14,106</td>
                     <td>71.8%</td>
-                    <td>$552.5B</td>
+                    <td>552</td>
                     <td><span style="color: #e74c3c;">🔴 ALTA</span></td>
                 </tr>
                 <tr>
                     <td>⛰️ Nariño</td>
                     <td>3,449</td>
                     <td>98.1%</td>
-                    <td>$20.2B</td>
+                    <td>179</td>
                     <td><span style="color: #e74c3c;">🔴 ALTA</span></td>
                 </tr>
                 <tr>
                     <td>🌄 Tolima</td>
                     <td>3,372</td>
                     <td>78.3%</td>
-                    <td>$34.0B</td>
+                    <td>201</td>
                     <td><span style="color: #e74c3c;">🔴 ALTA</span></td>
                 </tr>
                 <tr>
                     <td>🏞️ Cauca</td>
                     <td>3,087</td>
                     <td>74.3%</td>
-                    <td>$108.2M</td>
+                    <td>135</td>
                     <td><span style="color: #f39c12;">🟧 MEDIA</span></td>
                 </tr>
                 <tr>
                     <td>🌋 Huila</td>
                     <td>1,939</td>
                     <td>67.8%</td>
-                    <td>$37.2M</td>
+                    <td>90</td>
                     <td><span style="color: #f39c12;">🟧 MEDIA</span></td>
                 </tr>
             </tbody>
@@ -585,7 +620,7 @@
                 <div class="metric-card">
                     <strong>ESTADÍSTICAS CLAVE</strong>
                     <p>• Total casos: 21,190</p>
-                    <p>• Casos con cuantía: 45.2%</p>
+                    <p>• Casos con cuantía identificada: 45.2%</p>
                     <p>• Casos > 10 SMLV: 4.3%</p>
                 </div>
                 
@@ -593,78 +628,81 @@
                     <strong>VARIACIONES TERRITORIALES</strong>
                     <p>• Máximo: Nariño (98.1%)</p>
                     <p>• Mínimo: Boyacá (53.3%)</p>
-                    <p>• Promedio: 78.9%</p>
+                    <p>• Promedio nacional: 78.9%</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Slide 7: Impacto Económico -->
+    <!-- Slide 7: Distribución de Casos -->
     <div class="slide" id="slide7">
         <div class="header">
-            <h2>💰 IMPACTO ECONÓMICO</h2>
+            <h2>📊 DISTRIBUCIÓN DE CASOS</h2>
         </div>
         
-        <h3>Top 5 Departamentos - Cuantías Identificadas</h3>
-        <table class="department-table">
-            <thead>
-                <tr>
-                    <th>Departamento</th>
-                    <th>Cuantía Total</th>
-                    <th>Cuantía Promedio</th>
-                    <th>Casos > 10 SMLV</th>
-                    <th>Impacto</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>🏙️ Medellín</td>
-                    <td>$552.5 BILLONES</td>
-                    <td>$39.2 BILLONES</td>
-                    <td>552 casos</td>
-                    <td>🟥 CRÍTICO</td>
-                </tr>
-                <tr>
-                    <td>🌄 Tolima</td>
-                    <td>$34.0 BILLONES</td>
-                    <td>$10.1 BILLONES</td>
-                    <td>201 casos</td>
-                    <td>🟥 ALTO</td>
-                </tr>
-                <tr>
-                    <td>⛰️ Nariño</td>
-                    <td>$20.2 BILLONES</td>
-                    <td>$5.9 BILLONES</td>
-                    <td>179 casos</td>
-                    <td>🟥 ALTO</td>
-                </tr>
-                <tr>
-                    <td>🏞️ Cauca</td>
-                    <td>$108.2 MIL MILLONES</td>
-                    <td>$35.1 MILLONES</td>
-                    <td>135 casos</td>
-                    <td>🟧 MEDIO</td>
-                </tr>
-                <tr>
-                    <td>🌋 Huila</td>
-                    <td>$37.2 MIL MILLONES</td>
-                    <td>$19.2 MILLONES</td>
-                    <td>90 casos</td>
-                    <td>🟧 MEDIO</td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="metric-card" style="margin-top: 30px;">
-            <strong>⚖️ UMBRAL 10 SMLV 2025: $14,235,000</strong>
-            <p>4.3% de casos nacionales superan este umbral crítico</p>
+        <div class="case-distribution">
+            <h3 style="color: white;">VOLUMEN DE CASOS POR DEPARTAMENTO</h3>
+            <div class="distribution-chart">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="chart-bar" style="height: 180px;"></div>
+                    <div class="chart-label">Medellín<br>14,106</div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="chart-bar" style="height: 80px;"></div>
+                    <div class="chart-label">Nariño<br>3,449</div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="chart-bar" style="height: 75px;"></div>
+                    <div class="chart-label">Tolima<br>3,372</div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="chart-bar" style="height: 70px;"></div>
+                    <div class="chart-label">Cauca<br>3,087</div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="chart-bar" style="height: 45px;"></div>
+                    <div class="chart-label">Huila<br>1,939</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid" style="margin-top: 40px;">
+            <div>
+                <h3>📈 CONCENTRACIÓN TERRITORIAL</h3>
+                <div class="metric-card">
+                    <strong>TOP 3 DEPARTAMENTOS</strong>
+                    <p>77.8% del total nacional</p>
+                    <p>Medellín, Nariño, Tolima</p>
+                </div>
+                
+                <div class="metric-card">
+                    <strong>CASOS CRÍTICOS</strong>
+                    <p>1,158 casos > 10 SMLV</p>
+                    <p>4.3% del total nacional</p>
+                </div>
+            </div>
+            
+            <div>
+                <h3>🎯 EFICIENCIA OPERATIVA</h3>
+                <div class="metric-card">
+                    <strong>CLASIFICACIÓN DE CASOS</strong>
+                    <p>82.2% casos clasificados</p>
+                    <p>17.8% oportunidad mejora</p>
+                </div>
+                
+                <div class="metric-card">
+                    <strong>COBERTURA GEOGRÁFICA</strong>
+                    <p>9 departamentos analizados</p>
+                    <p>Patrón nacional consistente</p>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Slide 8: Mapas de Calor -->
     <div class="slide" id="slide8">
         <div class="header">
-            <h2>🎨 MAPAS DE CALOR Y VISUALIZACIONES</h2>
+            <h2>🎨 MAPAS DE CALOR Y PRIORIZACIÓN</h2>
         </div>
         
         <div class="content-grid">
@@ -672,20 +710,23 @@
                 <h3>🟥 ALTA PRIORIDAD (Crítico)</h3>
                 <div class="metric-card priority-high">
                     <strong>🏙️ MEDELLÍN</strong>
-                    <p>Volumen + Impacto económico masivo</p>
-                    <p>14,106 casos - $552.5B</p>
+                    <p>Volumen masivo de casos</p>
+                    <p>14,106 casos - 552 críticos</p>
+                    <p>52.5% del total nacional</p>
                 </div>
                 
                 <div class="metric-card priority-high">
                     <strong>⛰️ NARIÑO</strong>
-                    <p>Concentración crítica + Casos sobre umbral</p>
-                    <p>98.1% Fenómeno C - 179 casos críticos</p>
+                    <p>Concentración crítica</p>
+                    <p>98.1% Fenómeno C</p>
+                    <p>179 casos críticos</p>
                 </div>
                 
                 <div class="metric-card priority-high">
                     <strong>🌄 TOLIMA</strong>
-                    <p>Volumen + Casos sobre umbral</p>
+                    <p>Alto volumen + casos críticos</p>
                     <p>6.0% casos > 10 SMLV</p>
+                    <p>201 casos críticos</p>
                 </div>
             </div>
             
@@ -694,34 +735,29 @@
                 <div class="metric-card priority-medium">
                     <strong>🏞️ CAUCA</strong>
                     <p>Volumen significativo</p>
-                    <p>3,087 casos - $108.2M</p>
+                    <p>3,087 casos totales</p>
+                    <p>135 casos críticos</p>
                 </div>
                 
                 <div class="metric-card priority-medium">
                     <strong>🌋 HUILA</strong>
                     <p>Volumen significativo</p>
-                    <p>1,939 casos - $37.2M</p>
+                    <p>1,939 casos totales</p>
+                    <p>90 casos críticos</p>
                 </div>
                 
                 <div class="metric-card priority-medium">
                     <strong>🏔️ BOYACÁ</strong>
                     <p>Alto porcentaje casos críticos</p>
                     <p>5.4% casos > 10 SMLV</p>
-                </div>
-
-                <h3>🟨 BAJA PRIORIDAD (Medio)</h3>
-                <div class="metric-card priority-low">
-                    <strong>📍 MAG</strong>
-                    <p>Menor escala pero patrones similares</p>
-                    <p>1,165 casos - $639.9M</p>
-                </div>
-
-                <div class="metric-card priority-low">
-                    <strong>🌿 PUTUMAYO</strong>
-                    <p>Menor escala pero patrones similares</p>
-                    <p>213 casos - $2.3M</p>
+                    <p>61 casos críticos</p>
                 </div>
             </div>
+        </div>
+
+        <div class="metric-card" style="margin-top: 20px;">
+            <strong>📋 CRITERIOS DE PRIORIZACIÓN</strong>
+            <p>• Volumen total de casos • Porcentaje de casos críticos • Concentración del Fenómeno C • Eficiencia en clasificación</p>
         </div>
     </div>
 
@@ -736,7 +772,7 @@
                 <h3>🎯 INTERVENCIÓN INMEDIATA</h3>
                 <div class="metric-card priority-high">
                     <strong>🔴 MEDELLÍN</strong>
-                    <p>Plan integral por volumen e impacto económico</p>
+                    <p>Plan integral por volumen masivo</p>
                     <p><em>Acción: Primeros 30 días</em></p>
                 </div>
                 
@@ -748,7 +784,7 @@
                 
                 <div class="metric-card priority-high">
                     <strong>🔴 TOLIMA</strong>
-                    <p>Acción específica por casos sobre umbral</p>
+                    <p>Acción específica por casos críticos</p>
                     <p><em>Acción: Primeros 30 días</em></p>
                 </div>
             </div>
@@ -811,14 +847,14 @@
         </div>
         
         <div class="metric-card" style="margin-top: 30px;">
-            <strong>🎯 META PRINCIPAL: Reducción 25% impacto económico para Q4 2025</strong>
+            <strong>🎯 META PRINCIPAL: Reducción 25% casos críticos para Q4 2025</strong>
         </div>
     </div>
 
-    <!-- Slide 11: Dashboard Propuesto -->
+    <!-- Slide 11: Sistema de Monitoreo -->
     <div class="slide" id="slide11">
         <div class="header">
-            <h2>📱 DASHBOARD DE MONITOREO</h2>
+            <h2>📱 SISTEMA DE MONITOREO</h2>
         </div>
         
         <div class="content-grid">
@@ -870,8 +906,8 @@
                 </div>
 
                 <div class="metric-card">
-                    <strong>💰 IMPACTO ECONÓMICO</strong>
-                    <p>Meta: -25% pérdidas Q4 2025</p>
+                    <strong>📊 CASOS CRÍTICOS</strong>
+                    <p>Meta: -25% casos Q4 2025</p>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 0%"></div>
                     </div>
@@ -891,8 +927,8 @@
                 <h3>✅ HALLAZGOS CONFIRMADOS</h3>
                 <p>• <strong>Consistencia territorial</strong>: Mismo patrón en todas las regiones</p>
                 <p>• <strong>Dominancia absoluta</strong>: Fenómeno C representa amenaza principal</p>
-                <p>• <strong>Escalabilidad</strong>: Problema crece con volumen poblacional</p>
-                <p>• <strong>Oportunidad</strong>: Datos permiten intervención precisa</p>
+                <p>• <strong>Concentración geográfica</strong>: 3 departamentos concentran 77.8% casos</p>
+                <p>• <strong>Oportunidad mejora</strong>: 17.8% casos sin clasificar</p>
             </div>
             
             <div class="conclusion-card">
@@ -907,13 +943,13 @@
         <div class="next-steps">
             <h3>📋 PRÓXIMOS PASOS INMEDIATOS</h3>
             <p><strong>• 48 horas</strong>: Reunión equipos territoriales y activación protocolos emergencia</p>
-            <p><strong>• 2 semanas</strong>: Diseño detallado dashboard y plan capacitación regional</p>
+            <p><strong>• 2 semanas</strong>: Diseño detallado sistema monitoreo y plan capacitación</p>
             <p><strong>• 1 mes</strong>: Implementación sistema alertas y evaluación primera fase</p>
         </div>
 
         <div class="metric-card" style="margin-top: 20px; background: #d4edda; border-left-color: #27ae60;">
             <strong>🚀 LISTOS PARA LA IMPLEMENTACIÓN</strong>
-            <p style="font-size: 1.2em; font-weight: bold;">Reducción 25% impacto económico para Q4 2025</p>
+            <p style="font-size: 1.2em; font-weight: bold;">Reducción 25% casos críticos para Q4 2025</p>
         </div>
     </div>
 
@@ -931,7 +967,7 @@
             <div class="metric-card" style="max-width: 500px; margin-top: 40px;">
                 <strong>📞 CONTACTO Y SEGUIMIENTO</strong>
                 <p>Departamento de Análisis Criminal Digital</p>
-                <p>analisis.decdi@organizacion.gov</p>
+                <p>joseluis.lopez@fiscalia.gov.co</p>
                 <p>Próxima revisión: Noviembre 2025</p>
             </div>
         </div>
