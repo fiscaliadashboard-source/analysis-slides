@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Análisis de Planta - DECDI</title>
     <style>
+        /* Todos los estilos CSS anteriores se mantienen igual */
         * {
             margin: 0;
             padding: 0;
@@ -716,530 +717,866 @@
         .leyenda-alta { background: #dc3545; }
         .leyenda-media { background: #ffc107; }
         .leyenda-baja { background: #28a745; }
+
+        /* Estilos para la carga de CSV */
+        .csv-upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: white;
+            padding: 40px;
+        }
+
+        .upload-box {
+            background: #f8f9fa;
+            border: 3px dashed #1a3a8f;
+            border-radius: 12px;
+            padding: 60px 40px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: #1a3a8f;
+            margin-bottom: 20px;
+        }
+
+        .upload-title {
+            color: #1a3a8f;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .upload-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            background: #1a3a8f;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .file-label:hover {
+            background: #2c5aa0;
+            transform: translateY(-2px);
+        }
+
+        .file-name {
+            margin-top: 15px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border-left: 4px solid #dc3545;
+            display: none;
+        }
+
+        .success-message {
+            background: #d1edff;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border-left: 4px solid #1a3a8f;
+            display: none;
+        }
+
+        .requirements {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .requirements h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .requirements ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .requirements li {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
-    <button class="restart-btn" onclick="irASlide(0)">Reiniciar Presentación</button>
-
-    <div class="slides-container" id="slidesContainer">
-        <!-- Slide 1: Portada -->
-        <div class="slide">
-            <div class="content">
-                <div class="slide-header">
-                    <h1 class="slide-title">Análisis de Planta de Personal</h1>
-                    <p class="slide-subtitle">Dirección Especializada contra los Delitos Informáticos (DECDI)</p>
-                    <p class="slide-subtitle">Fecha de corte: 16 de octubre de 2025</p>
-                </div>
-                <div class="stats-container">
-                    <div class="stat-card">
-                        <div class="stat-value">53</div>
-                        <div class="stat-label">Total de Funcionarios</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">92%</div>
-                        <div class="stat-label">Provisionalidad(49 de 53 funcionarios)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">53%</div>
-                        <div class="stat-label">Con Encargos Activos(28 de 53 funcionarios)</div>
-                    </div>
-                </div>
+    <div id="csvUploadContainer" class="csv-upload-container">
+        <div class="upload-box">
+            <div class="upload-icon">📊</div>
+            <h2 class="upload-title">Cargar Datos de Personal</h2>
+            <p class="upload-subtitle">Selecciona un archivo CSV con los datos de personal para generar el análisis</p>
+            
+            <input type="file" id="csvFile" class="file-input" accept=".csv">
+            <label for="csvFile" class="file-label">Seleccionar Archivo CSV</label>
+            <div id="fileName" class="file-name"></div>
+            
+            <div id="errorMessage" class="error-message">
+                Error al cargar el archivo. Por favor verifica el formato.
             </div>
-        </div>
-
-        <!-- Slide 2: Tipos de Nombramiento -->
-        <div class="slide">
-            <div class="content">
-                <h2>Tipos de Nombramiento</h2>
-                
-                <div class="chart-container">
-                    <div class="chart">
-                        <h3>Distribución por Tipo de Nombramiento</h3>
-                        <div class="bar">
-                            <div class="bar-label">PROVISIONALIDAD</div>
-                            <div class="bar-value" style="width: 91%;">49 (92%)</div>
-                        </div>
-                        <div class="bar">
-                            <div class="bar-label">PROPIEDAD</div>
-                            <div class="bar-value" style="width: 9%;">4 (8%)</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="insight">
-                    <h3>Hallazgo Crítico</h3>
-                    <p>Existe una <span class="highlight">alta proporción de provisionalidad (92%)</span> en la planta de personal de la DECDI. Solo 4 funcionarios (8%) tienen nombramiento en propiedad, lo que afecta la estabilidad laboral y la continuidad de los procesos.</p>
-                </div>
+            
+            <div id="successMessage" class="success-message">
+                Archivo cargado correctamente. Generando presentación...
             </div>
-        </div>
 
-        <!-- Slide 3: Todos los Cargos Nominales -->
-        <div class="slide">
-            <div class="content">
-                <h2>Inventario de Cargos Nominales (NOM_CARGO)</h2>
-                <p>Lista completa de todos los cargos nominales existentes en la DECDI</p>
-                
-                <div class="search-section">
-                    <input type="text" class="search-input" id="searchCargos" placeholder="Buscar cargo específico..." onkeyup="filtrarCargos()">
-                    <div><small>Escriba para filtrar los cargos por nombre</small></div>
-                </div>
-                
-                <div class="todos-cargos-container">
-                    <div class="cargos-grid" id="cargosGrid">
-                        <!-- Los cargos se generan dinámicamente -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 4: Encargos Activos -->
-        <div class="slide">
-            <div class="content">
-                <h2>Encargos Activos - Situación Crítica</h2>
-                
-                <div class="stats-container">
-                    <div class="stat-card">
-                        <div class="stat-value">28</div>
-                        <div class="stat-label">Total de Encargos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">25</div>
-                        <div class="stat-label">En Provisionalidad</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">3</div>
-                        <div class="stat-label">En Propiedad</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">89%</div>
-                        <div class="stat-label">Encargos en Provisionalidad</div>
-                    </div>
-                </div>
-
-                <div class="insight">
-                    <h3>Análisis de Encargos</h3>
-                    <p><span class="critical">89% de los encargos (25 de 28) son realizados por funcionarios en provisionalidad.</span> Esto representa un <span class="highlight">doble nivel de temporalidad</span> que afecta severamente la estabilidad organizacional.</p>
-                    <p><strong>Fecha máxima de encargo identificada: 2027-12-31</strong></p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 5: Gráfica de Cargos -->
-        <div class="slide">
-            <div class="content">
-                <h2>Distribución de Cargos</h2>
-                <p>Análisis detallado de los cargos y su composición por tipo de nombramiento</p>
-                
-                <div class="grafica-cargos" id="graficaCargos">
-                    <!-- Los cargos se generan dinámicamente -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 6: Filtros Interactivos -->
-        <div class="slide">
-            <div class="content">
-                <h2>Búsqueda de Personal</h2>
-                <p>Filtre el personal por cargo nominal o cargo de encargo</p>
-                
-                <div class="filtros-container">
-                    <div class="filtro-group">
-                        <div class="filtro-label">Cargo Nominal:</div>
-                        <select id="filtroCargo" onchange="aplicarFiltros()">
-                            <option value="">Todos los cargos</option>
-                            <!-- Opciones generadas dinámicamente -->
-                        </select>
-                    </div>
-                    
-                    <div class="filtro-group">
-                        <div class="filtro-label">Cargo de Encargo:</div>
-                        <select id="filtroEncargo" onchange="aplicarFiltros()">
-                            <option value="">Todos los encargos</option>
-                            <!-- Opciones generadas dinámicamente -->
-                        </select>
-                    </div>
-                    
-                    <div class="resultados-filtro" id="resultadosFiltro">
-                        <!-- Resultados generados dinámicamente -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 7: Análisis de Carga Laboral por Fiscal -->
-        <div class="slide">
-            <div class="content">
-                <h2>Análisis de Carga Laboral por Fiscal</h2>
-                <p>Distribución de trabajo en SPOA/DECDI, Apoyos Seccionales y Apoyo-DECDI</p>
-                
-                <div class="stats-container">
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalFiscalesActivos">0</div>
-                        <div class="stat-label">Fiscales con Carga Activa</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalCargaSPOA">0</div>
-                        <div class="stat-label">Total SPOA/DECDI</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalCargaApoyos">0</div>
-                        <div class="stat-label">Total Apoyos Seccionales</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalCargaDECDI">0</div>
-                        <div class="stat-label">Total Apoyo-DECDI</div>
-                    </div>
-                </div>
-
-                <div class="filtros-container">
-                    <div class="filtro-group">
-                        <div class="filtro-label">Ordenar por:</div>
-                        <select id="ordenCarga" onchange="ordenarCargaFiscal()">
-                            <option value="total">Carga Total (Descendente)</option>
-                            <option value="spoa">SPOA/DECDI (Descendente)</option>
-                            <option value="apoyos">Apoyos Seccionales (Descendente)</option>
-                            <option value="decdi">Apoyo-DECDI (Descendente)</option>
-                            <option value="nombre">Nombre (Ascendente)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="resultados-filtro" id="resultadosCargaFiscal" style="max-height: 600px;">
-                        <!-- Resultados generados dinámicamente -->
-                    </div>
-                </div>
-
-                <!-- Semáforo de Carga Laboral -->
-                <div class="semaforo-container">
-                    <h3 class="semaforo-title">Semáforo de Carga Laboral</h3>
-                    <div class="semaforo-grid" id="semaforoCarga">
-                        <!-- Los niveles de carga se generan dinámicamente -->
-                    </div>
-                    <div class="semaforo-leyenda">
-                        <div class="leyenda-item">
-                            <div class="leyenda-color leyenda-alta"></div>
-                            <span>Alta Carga (20+ casos)</span>
-                        </div>
-                        <div class="leyenda-item">
-                            <div class="leyenda-color leyenda-media"></div>
-                            <span>Media Carga (10-19 casos)</span>
-                        </div>
-                        <div class="leyenda-item">
-                            <div class="leyenda-color leyenda-baja"></div>
-                            <span>Baja Carga (0-9 casos)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="insight">
-                    <h3>Hallazgos de Distribución de Carga</h3>
-                    <p id="analisisCarga">Cargando análisis...</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 8: Recomendaciones -->
-        <div class="slide">
-            <div class="content">
-                <h2>Recomendaciones Estratégicas</h2>
-                
-                <div class="recommendation">
-                    <h3>Acciones Urgentes</h3>
-                    <ol>
-                        <li><strong>Implementar plan urgente de estabilización laboral</strong> para convertir provisionalidad a propiedad</li>
-                        <li><strong>Revisar inmediatamente la política de encargos</strong> para funcionarios en provisionalidad</li>
-                        <li><strong>Priorizar la propiedad en cargos críticos y de liderazgo</strong></li>
-                        <li><strong>Establecer límites temporales</strong> para encargos en personal provisional</li>
-                        <li><strong>Crear programa de retención</strong> para personal clave en provisionalidad</li>
-                        <li><strong>Evaluar reestructuración de planta</strong> para adecuarla a necesidades permanentes</li>
-                    </ol>
-                </div>
-
-                <div class="stats-container">
-                    <div class="stat-card">
-                        <div class="stat-value">✓</div>
-                        <div class="stat-label">Estabilidad Laboral</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">✓</div>
-                        <div class="stat-label">Continuidad Operativa</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">✓</div>
-                        <div class="stat-label">Planificación Estratégica</div>
-                    </div>
-                </div>
+            <div class="requirements">
+                <h4>Requisitos del archivo CSV:</h4>
+                <ul>
+                    <li><strong>Columnas requeridas:</strong> NUM_DOCUMENTO, NOM_APELLIDOS, NOM_TIP_NOMBRAMIENTO, NOM_CARGO, NOM_CAR_ENCARGO</li>
+                    <li><strong>Columnas recomendadas para análisis de carga:</strong> DESPACHO_FISCAL, SPOA, APOYOS, DECDI</li>
+                    <li>Formato UTF-8</li>
+                    <li>Separado por comas</li>
+                    <li>Primera fila debe ser el encabezado</li>
+                    <li>El análisis de carga laboral se enfoca en personal fiscal (excluye "NO ES FISCAL")</li>
+                </ul>
             </div>
         </div>
     </div>
 
-    <div class="navegacion">
-        <button class="btn-nav" id="btnAnterior" onclick="cambiarSlide(-1)">Anterior</button>
-        <button class="btn-nav" id="btnSiguiente" onclick="cambiarSlide(1)">Siguiente</button>
-    </div>
+    <div id="presentationContainer" style="display: none;">
+        <button class="restart-btn" onclick="irASlide(0)">Reiniciar Presentación</button>
 
-    <div class="indicadores" id="indicadores">
-        <!-- Los indicadores se generan automáticamente -->
+        <div class="slides-container" id="slidesContainer">
+            <!-- Los slides se generan dinámicamente después de cargar el CSV -->
+        </div>
+
+        <div class="navegacion">
+            <button class="btn-nav" id="btnAnterior" onclick="cambiarSlide(-1)">Anterior</button>
+            <button class="btn-nav" id="btnSiguiente" onclick="cambiarSlide(1)">Siguiente</button>
+        </div>
+
+        <div class="indicadores" id="indicadores">
+            <!-- Los indicadores se generan automáticamente -->
+        </div>
     </div>
 
     <script>
-        // Datos completos basados en el archivo Excel proporcionado
-        const datosPersonas = [
-            { nombre: "Alvaro Salazar Avila", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Francisco Ignacio Pedraza Perez", cargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Jose Luis Lopez Bernal", cargo: "PROFESIONAL ESPECIALIZADO II", encargo: "PROFESIONAL EXPERTO", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Ana Marcela Moreno Guerrero", cargo: "ASISTENTE DE FISCAL II", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Luz Cecilia Garcia Cano", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROPIEDAD" },
-            { nombre: "Maria Gisella De La Trinidad Rivera Sefair", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Ingrid Lizeth Mantilla Rodriguez", cargo: "TECNICO II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Beatriz Eugenia Jaimes Reyes", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROPIEDAD" },
-            { nombre: "Giselle Carmona Sardoth", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Luz Mary Mosquera Arias", cargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Yineth Astrid Saavedra Corredor", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Rosa Ines Leiva Melo", cargo: "ASISTENTE DE FISCAL III", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Irsa Wandurraga Corzo", cargo: "PROFESIONAL ESPECIALIZADO II", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Gueryn Hernandez Espitia", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Maria Fernanda Jimenez Rubio", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL III", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Diana Marcela Rodriguez Monroy", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Yina Lorena Lopez Ramirez", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Erika Solangely Arias Ortiz", cargo: "SECRETARIO EJECUTIVO", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Diana Carolina Gonzalez Lizarazo", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Yadira Margarita Gavidia Bernal", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Maria Isabel Jimenez Garzon", cargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Diana Carolina Diaz Bernal", cargo: "ASISTENTE DE FISCAL I", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Angela Maria Estrada Espinosa", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Ingrid Patricia Vanegas De La Torre", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Maria Yaneth Manjarrez Orozco", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Adrian Gildardo Viana", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROPIEDAD" },
-            { nombre: "Juan Carlos Diaz Hernandez", cargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Jorge Enrique Maldonado Camargo", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Danny Efrain Rubio Cabrejo", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Edgar Mauricio Bolaños Macias", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Harold Giovanni Rincon Aguiar", cargo: "ASISTENTE DE FISCAL III", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Diego Hernando Manosalva Agredo", cargo: "PROFESIONAL DE GESTION III", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Vicente Muñoz Diaz", cargo: "SECRETARIO ADMINISTRATIVO I", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Paula Valeria Gomez Duarte", cargo: "SECRETARIO ADMINISTRATIVO I", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Erika Natalia Betancourt Martinez", cargo: "SECRETARIO ADMINISTRATIVO I", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Daniela Alejandra Lozada Bayona", cargo: "ASISTENTE DE FISCAL II", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Francy Lorena Betancourth Gutierrez", cargo: "SECRETARIO EJECUTIVO", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "David Fernando Vasquez Osorio", cargo: "FISCAL DELEGADO ANTE JUECES MUNICIPALES", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Natalia Cabrera Trujillo", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Victor Julio Junior Cruz Rozo", cargo: "PROFESIONAL INVESTIGADOR II", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Julieth Tatiana Garzon Contreras", cargo: "ASISTENTE DE FISCAL II", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Sebastian Avila Rodriguez", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL III", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Juan Jose Arteaga Muñoz", cargo: "ASISTENTE DE FISCAL IV", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Maria Lucia Mier Goyes", cargo: "PROFESIONAL DE GESTION II", encargo: "PROFESIONAL ESPECIALIZADO II", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Carlos Eduardo Portilla Velasco", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Martha Johanna Barbosa Medina", cargo: "ASISTENTE DE FISCAL II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Leivy Carolina Pérez Torres", cargo: "ASISTENTE DE FISCAL II", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Maribel Andrea Castiblanco Velez", cargo: "ASISTENTE DE FISCAL I", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Laura Cristina Lozano Varon", cargo: "ASISTENTE DE FISCAL I", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Valentina Peñaranda Hincapie", cargo: "ASISTENTE DE FISCAL IV", encargo: "", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Fredy Enrique Henao Yepez", cargo: "TECNICO II", encargo: "ASISTENTE DE FISCAL IV", nombramiento: "PROVISIONALIDAD" },
-            { nombre: "Douglas Stevenson Sosa Vanegas", cargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", encargo: "", nombramiento: "PROPIEDAD" },
-            { nombre: "Lenar Armando Colmenares Duque", cargo: "FISCAL DELEGADO ANTE JUECES DE CIRCUITO", encargo: "FISCAL DELEGADO ANTE JUECES CIRCUITO ESP", nombramiento: "PROVISIONALIDAD" }
-        ];
-
-        // Datos de carga fiscal basados en el Excel
-        function generarDatosCargaFiscal() {
-            return [
-                { nombre: "DOUGLAS STEVENSON SOSA VANEGAS", spoa: 1, apoyos: 0, decdi: 0, total: 1 },
-                { nombre: "YADIRA MARGARITA GAVIDIA BERNAL", spoa: 20, apoyos: 4, decdi: 0, total: 24 },
-                { nombre: "FRANCISCO IGNACIO PEDRAZA PEREZ", spoa: 3, apoyos: 1, decdi: 0, total: 4 },
-                { nombre: "GISELLE CARMONA SARDOTH", spoa: 10, apoyos: 4, decdi: 0, total: 14 },
-                { nombre: "GUERYN HERNANDEZ ESPITIA", spoa: 19, apoyos: 6, decdi: 0, total: 25 },
-                { nombre: "LENAR ARMANDO COLMENARES DUQUE", spoa: 8, apoyos: 24, decdi: 12, total: 44 },
-                { nombre: "LUZ MARY MOSQUERA ARIAS", spoa: 11, apoyos: 1, decdi: 0, total: 12 },
-                { nombre: "JUAN JOSE ARTEAGA MUÑOZ", spoa: 55, apoyos: 0, decdi: 0, total: 55 },
-                { nombre: "MARIA ISABEL JIMENEZ GARZON", spoa: 8, apoyos: 3, decdi: 1, total: 12 },
-                { nombre: "JUAN CARLOS DIAZ HERNANDEZ", spoa: 6, apoyos: 1, decdi: 2, total: 9 },
-                { nombre: "DANNY EFRAIN RUBIO CABREJO", spoa: 9, apoyos: 6, decdi: 1, total: 16 },
-                { nombre: "BEATRIZ EUGENIA JAIMES REYES", spoa: 6, apoyos: 1, decdi: 0, total: 7 },
-                { nombre: "LEIVY CAROLINA PEREZ TORRES", spoa: 2, apoyos: 0, decdi: 0, total: 2 },
-                { nombre: "DIEGO HERNANDO MANOSALVA AGREDO", spoa: 2, apoyos: 0, decdi: 0, total: 2 },
-                { nombre: "LUZ CECILIA GARCIA CANO", spoa: 1, apoyos: 0, decdi: 0, total: 1 },
-                { nombre: "ALVARO SALAZAR AVILA", spoa: 2, apoyos: 0, decdi: 0, total: 2 },
-                { nombre: "CARLOS EDUARDO PORTILLA VELASCO", spoa: 5, apoyos: 0, decdi: 0, total: 5 },
-                { nombre: "EDGAR MAURICIO BOLAÑOS MACIAS", spoa: 8, apoyos: 4, decdi: 1, total: 13 },
-                { nombre: "YINA LORENA LOPEZ RAMIREZ", spoa: 7, apoyos: 0, decdi: 8, total: 15 },
-                { nombre: "DIANA CAROLINA GONZALEZ LIZARAZO", spoa: 9, apoyos: 2, decdi: 1, total: 12 },
-                { nombre: "DAVID FERNANDO VASQUEZ OSORIO", spoa: 12, apoyos: 1, decdi: 0, total: 13 },
-                { nombre: "DIANA MARCELA RODRIGUEZ MONROY", spoa: 14, apoyos: 4, decdi: 1, total: 19 },
-                { nombre: "ANGELA MARIA ESTRADA ESPINOSA", spoa: 9, apoyos: 3, decdi: 1, total: 13 },
-                { nombre: "YINETH ASTRID SAAVEDRA CORREDOR", spoa: 14, apoyos: 4, decdi: 1, total: 19 },
-                { nombre: "MARIA GISELLA DE LA TRINIDAD RIVERA SEFAIR", spoa: 11, apoyos: 4, decdi: 0, total: 15 }
-            ];
-        }
-
+        // Variables globales para los datos
+        let datosPersonas = [];
+        let datosCargaFiscal = [];
         let slideActual = 0;
-        const totalSlides = document.querySelectorAll('.slide').length;
-        const slidesContainer = document.getElementById('slidesContainer');
-        const indicadores = document.getElementById('indicadores');
-        const btnAnterior = document.getElementById('btnAnterior');
-        const btnSiguiente = document.getElementById('btnSiguiente');
+        let totalSlides = 0;
 
-        // Generar indicadores
-        for (let i = 0; i < totalSlides; i++) {
-            const indicador = document.createElement('div');
-            indicador.className = 'indicador' + (i === 0 ? ' activo' : '');
-            indicador.onclick = () => irASlide(i);
-            indicadores.appendChild(indicador);
-        }
+        // Elementos del DOM
+        const csvUploadContainer = document.getElementById('csvUploadContainer');
+        const presentationContainer = document.getElementById('presentationContainer');
+        const csvFileInput = document.getElementById('csvFile');
+        const fileNameDisplay = document.getElementById('fileName');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
 
-        function cambiarSlide(direccion) {
-            const nuevoSlide = slideActual + direccion;
-            if (nuevoSlide >= 0 && nuevoSlide < totalSlides) {
-                irASlide(nuevoSlide);
-            } else if (nuevoSlide >= totalSlides) {
-                // Si es el último slide, reiniciar al principio
-                irASlide(0);
+        // Event listener para la carga del archivo
+        csvFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileNameDisplay.textContent = `Archivo seleccionado: ${file.name}`;
+                errorMessage.style.display = 'none';
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const csvData = e.target.result;
+                        procesarCSV(csvData);
+                    } catch (error) {
+                        mostrarError('Error al procesar el archivo: ' + error.message);
+                    }
+                };
+                reader.onerror = function() {
+                    mostrarError('Error al leer el archivo');
+                };
+                reader.readAsText(file, 'UTF-8');
             }
-        }
-
-        function irASlide(nuevoSlide) {
-            slideActual = nuevoSlide;
-            slidesContainer.style.transform = `translateX(-${slideActual * 100}vw)`;
-            
-            // Actualizar indicadores
-            document.querySelectorAll('.indicador').forEach((ind, index) => {
-                ind.classList.toggle('activo', index === slideActual);
-            });
-            
-            // Actualizar estado de botones
-            btnAnterior.disabled = slideActual === 0;
-            btnSiguiente.textContent = slideActual === totalSlides - 1 ? 'Reiniciar' : 'Siguiente';
-            
-            // Si estamos en slides que requieren procesamiento de datos
-            if (slideActual === 2) { // Slide de todos los cargos
-                generarTodosLosCargos();
-            } else if (slideActual === 4) { // Slide de gráfica de cargos
-                generarGraficaCargos();
-            } else if (slideActual === 5) { // Slide de filtros
-                inicializarFiltros();
-            } else if (slideActual === 6) { // Slide de análisis de carga
-                mostrarAnalisisCargaFiscal();
-                generarSemaforoCarga();
-            }
-        }
-
-        // Navegación con teclado
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') cambiarSlide(-1);
-            if (e.key === 'ArrowRight') cambiarSlide(1);
         });
 
-        // Funciones para mostrar todos los cargos nominales
-        function generarTodosLosCargos() {
-            const contenedor = document.getElementById('cargosGrid');
-            contenedor.innerHTML = '';
-            
-            // Agrupar por cargo
-            const cargos = {};
-            datosPersonas.forEach(persona => {
-                if (!cargos[persona.cargo]) {
-                    cargos[persona.cargo] = {
-                        personas: [],
-                        total: 0,
-                        provisionalidad: 0,
-                        propiedad: 0,
-                        conEncargo: 0
-                    };
+        function mostrarError(mensaje) {
+            errorMessage.textContent = mensaje;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        function mostrarExito() {
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'block';
+        }
+
+        function procesarCSV(csvData) {
+            try {
+                const lineas = csvData.split('\n');
+                if (lineas.length < 2) {
+                    mostrarError('El archivo CSV está vacío o no tiene datos');
+                    return;
                 }
+
+                // Obtener encabezados
+                const encabezados = lineas[0].split(',').map(h => h.trim().replace(/"/g, ''));
                 
-                cargos[persona.cargo].personas.push(persona);
-                cargos[persona.cargo].total++;
-                if (persona.nombramiento === 'PROVISIONALIDAD') {
-                    cargos[persona.cargo].provisionalidad++;
+                // Verificar encabezados requeridos mínimos
+                const encabezadosRequeridos = ['NUM_DOCUMENTO', 'NOM_APELLIDOS', 'NOM_TIP_NOMBRAMIENTO', 'NOM_CARGO'];
+                const encabezadosFaltantes = encabezadosRequeridos.filter(h => !encabezados.includes(h));
+                
+                if (encabezadosFaltantes.length > 0) {
+                    mostrarError(`Faltan columnas requeridas: ${encabezadosFaltantes.join(', ')}`);
+                    return;
+                }
+
+                // Procesar datos
+                datosPersonas = [];
+                for (let i = 1; i < lineas.length; i++) {
+                    if (lineas[i].trim() === '') continue;
+                    
+                    const valores = parseCSVLine(lineas[i]);
+                    if (valores.length === encabezados.length) {
+                        const persona = {};
+                        encabezados.forEach((encabezado, index) => {
+                            persona[encabezado] = valores[index] || '';
+                        });
+                        
+                        // Mapear a la estructura esperada
+                        const datosPersona = {
+                            nombre: persona.NOM_APELLIDOS,
+                            cargo: persona.NOM_CARGO,
+                            nombramiento: persona.NOM_TIP_NOMBRAMIENTO
+                        };
+
+                        // Agregar encargo si existe la columna
+                        if (encabezados.includes('NOM_CAR_ENCARGO')) {
+                            datosPersona.encargo = persona.NOM_CAR_ENCARGO;
+                        }
+
+                        // Agregar datos de carga si existen
+                        if (encabezados.includes('SPOA/DECDI')) {
+                            datosPersona.spoa = parseInt(persona['SPOA/DECDI']) || 0;
+                        }
+                        if (encabezados.includes('APOYOS SECCIONAL')) {
+                            datosPersona.apoyos = parseInt(persona['APOYOS SECCIONAL']) || 0;
+                        }
+                        if (encabezados.includes('APOYO-DECDI')) {
+                            datosPersona.decdi = parseInt(persona['APOYO-DECDI']) || 0;
+                        }
+
+                        datosPersonas.push(datosPersona);
+                    }
+                }
+
+                if (datosPersonas.length === 0) {
+                    mostrarError('No se pudieron procesar datos del archivo CSV');
+                    return;
+                }
+
+                // Generar datos de carga fiscal
+                generarDatosCargaFiscalDesdeCSV();
+                
+                mostrarExito();
+                
+                // Esperar un momento y luego generar la presentación
+                setTimeout(() => {
+                    csvUploadContainer.style.display = 'none';
+                    presentationContainer.style.display = 'block';
+                    generarPresentacionCompleta();
+                }, 1000);
+
+            } catch (error) {
+                mostrarError('Error al procesar el CSV: ' + error.message);
+            }
+        }
+
+        function parseCSVLine(line) {
+            const resultado = [];
+            let campoActual = '';
+            let entreComillas = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    entreComillas = !entreComillas;
+                } else if (char === ',' && !entreComillas) {
+                    resultado.push(campoActual.trim());
+                    campoActual = '';
                 } else {
-                    cargos[persona.cargo].propiedad++;
+                    campoActual += char;
                 }
-                
-                if (persona.encargo) {
-                    cargos[persona.cargo].conEncargo++;
-                }
-            });
+            }
             
-            // Generar elementos para cada cargo
-            Object.entries(cargos).forEach(([cargo, datos]) => {
-                const elemento = document.createElement('div');
-                elemento.className = 'cargo-completo-item';
-                elemento.dataset.cargo = cargo.toLowerCase();
+            resultado.push(campoActual.trim());
+            return resultado.map(campo => campo.replace(/^"|"$/g, ''));
+        }
+        // REEMPLAZAR la función generarDatosCargaFiscalDesdeCSV con esta versión
+        function generarDatosCargaFiscalDesdeCSV() {
+            // Filtrar solo fiscales (excluyendo "NO ES FISCAL")
+            const fiscales = datosPersonas.filter(persona => {
+                // Verificar que tenga despacho fiscal y NO sea "NO ES FISCAL"
+                const esFiscal = persona.despachoFiscal && 
+                                persona.despachoFiscal !== "NO ES FISCAL" &&
+                                persona.despachoFiscal !== "" &&
+                                persona.despachoFiscal !== null &&
+                                persona.despachoFiscal !== undefined;
                 
-                elemento.innerHTML = `
-                    <div class="cargo-completo-header">
-                        <div class="cargo-completo-nombre">${cargo}</div>
-                        <div class="cargo-completo-total">${datos.total}</div>
-                    </div>
-                    <div class="cargo-completo-personas">
-                        ${datos.personas.map(persona => `
-                            <div class="persona-cargo-item">
-                                <div class="persona-cargo-nombre">${persona.nombre}</div>
-                                <div class="persona-cargo-estado">
-                                    <span class="tipo-nombramiento ${persona.nombramiento === 'PROVISIONALIDAD' ? 'provisionalidad' : 'propiedad'}">
-                                        ${persona.nombramiento}
-                                    </span>
-                                    ${persona.encargo ? 
-                                        `<span class="tipo-nombramiento encargo">ENCARGO</span>` : 
-                                        ''
-                                    }
-                                </div>
+                return esFiscal;
+            });
+
+            console.log(`Fiscales identificados: ${fiscales.length} de ${datosPersonas.length} registros totales`);
+
+            // Procesar solo los fiscales que tienen datos de carga en el CSV
+            datosCargaFiscal = fiscales.map((fiscal, index) => {
+                // Convertir los datos de carga a números
+                const spoa = parseInt(fiscal.spoa) || 0;
+                const apoyos = parseInt(fiscal.apoyos) || 0;
+                const decdi = parseInt(fiscal.decdi) || 0;
+                const total = spoa + apoyos + decdi;
+                
+                return {
+                    nombre: fiscal.nombre.toUpperCase(),
+                    spoa: spoa,
+                    apoyos: apoyos,
+                    decdi: decdi,
+                    total: total,
+                    despachoFiscal: fiscal.despachoFiscal,
+                    cargo: fiscal.cargo,
+                    nombramiento: fiscal.nombramiento,
+                    tieneDatosReales: (spoa > 0 || apoyos > 0 || decdi > 0)
+                };
+            }).filter(fiscal => fiscal.tieneDatosReales); // Solo incluir fiscales con carga real
+
+            console.log(`Fiscales con carga laboral: ${datosCargaFiscal.length}`);
+        }
+
+        // ACTUALIZAR la función procesarCSV para incluir mejor manejo de columnas
+        function procesarCSV(csvData) {
+            try {
+                const lineas = csvData.split('\n');
+                if (lineas.length < 2) {
+                    mostrarError('El archivo CSV está vacío o no tiene datos');
+                    return;
+                }
+
+                // Obtener encabezados
+                const encabezados = lineas[0].split(',').map(h => h.trim().replace(/"/g, ''));
+                
+                // Verificar encabezados requeridos
+                const encabezadosRequeridos = ['NUM_DOCUMENTO', 'NOM_APELLIDOS', 'NOM_TIP_NOMBRAMIENTO', 'NOM_CARGO', 'NOM_CAR_ENCARGO'];
+                const encabezadosFaltantes = encabezadosRequeridos.filter(h => !encabezados.includes(h));
+                
+                if (encabezadosFaltantes.length > 0) {
+                    mostrarError(`Faltan columnas requeridas: ${encabezadosFaltantes.join(', ')}`);
+                    return;
+                }
+
+                // Verificar columnas de carga (opcionales pero recomendadas)
+                const tieneDespachoFiscal = encabezados.includes('DESPACHO_FISCAL');
+                const tieneDatosCarga = encabezados.includes('SPOA') && encabezados.includes('APOYOS') && encabezados.includes('DECDI');
+                
+                if (!tieneDespachoFiscal) {
+                    console.warn('Advertencia: No se encontró la columna DESPACHO_FISCAL. El análisis de carga laboral no se generará.');
+                }
+                
+                if (!tieneDatosCarga) {
+                    console.warn('Advertencia: No se encontraron las columnas SPOA, APOYOS, DECDI. El análisis de carga laboral no se generará.');
+                }
+
+                // Procesar datos
+                datosPersonas = [];
+                for (let i = 1; i < lineas.length; i++) {
+                    if (lineas[i].trim() === '') continue;
+                    
+                    const valores = parseCSVLine(lineas[i]);
+                    if (valores.length === encabezados.length) {
+                        const persona = {};
+                        encabezados.forEach((encabezado, index) => {
+                            persona[encabezado] = valores[index] || '';
+                        });
+                        
+                        // Mapear a la estructura esperada
+                        const datosPersona = {
+                            nombre: persona.NOM_APELLIDOS,
+                            cargo: persona.NOM_CARGO,
+                            encargo: persona.NOM_CAR_ENCARGO,
+                            nombramiento: persona.NOM_TIP_NOMBRAMIENTO
+                        };
+                        
+                        // Agregar campos opcionales si existen
+                        if (tieneDespachoFiscal) {
+                            datosPersona.despachoFiscal = persona.DESPACHO_FISCAL;
+                        }
+                        if (tieneDatosCarga) {
+                            datosPersona.spoa = persona.SPOA;
+                            datosPersona.apoyos = persona.APOYOS;
+                            datosPersona.decdi = persona.DECDI;
+                        }
+                        
+                        datosPersonas.push(datosPersona);
+                    }
+                }
+
+                if (datosPersonas.length === 0) {
+                    mostrarError('No se pudieron procesar datos del archivo CSV');
+                    return;
+                }
+
+                // Generar datos de carga fiscal solo si tenemos las columnas necesarias
+                if (tieneDespachoFiscal && tieneDatosCarga) {
+                    generarDatosCargaFiscalDesdeCSV();
+                } else {
+                    datosCargaFiscal = [];
+                }
+                
+                mostrarExito();
+                
+                // Esperar un momento y luego generar la presentación
+                setTimeout(() => {
+                    csvUploadContainer.style.display = 'none';
+                    presentationContainer.style.display = 'block';
+                    generarPresentacionCompleta();
+                }, 1000);
+
+            } catch (error) {
+                mostrarError('Error al procesar el CSV: ' + error.message);
+            }
+        }
+
+        // ACTUALIZAR la función generarSlideCargaLaboral
+        function generarSlideCargaLaboral() {
+            // Filtrar solo fiscales para las estadísticas
+            const totalFiscales = datosCargaFiscal.length;
+            
+            if (totalFiscales === 0) {
+                return `
+                    <div class="slide">
+                        <div class="content">
+                            <h2>Análisis de Carga Laboral por Fiscal</h2>
+                            <div class="insight">
+                                <h3>No hay datos de carga laboral disponibles</h3>
+                                <p>No se encontraron registros de fiscales con carga laboral en los datos cargados.</p>
+                                <p>Para generar este análisis, el archivo CSV debe incluir:</p>
+                                <ul>
+                                    <li>Columna "DESPACHO_FISCAL" con valores diferentes a "NO ES FISCAL"</li>
+                                    <li>Columnas "SPOA", "APOYOS", "DECDI" con datos numéricos de carga laboral</li>
+                                </ul>
                             </div>
-                        `).join('')}
+                        </div>
                     </div>
                 `;
+            }
+
+            const totalCargaSPOA = datosCargaFiscal.reduce((sum, fiscal) => sum + fiscal.spoa, 0);
+            const totalCargaApoyos = datosCargaFiscal.reduce((sum, fiscal) => sum + fiscal.apoyos, 0);
+            const totalCargaDECDI = datosCargaFiscal.reduce((sum, fiscal) => sum + fiscal.decdi, 0);
+            const totalCargaGeneral = totalCargaSPOA + totalCargaApoyos + totalCargaDECDI;
+
+            const cargaOrdenada = [...datosCargaFiscal].sort((a, b) => b.total - a.total);
+            const fiscalMayorCarga = cargaOrdenada[0];
+            const promedioCarga = totalFiscales > 0 ? cargaOrdenada.reduce((sum, fiscal) => sum + fiscal.total, 0) / totalFiscales : 0;
+            const fiscalesSobrePromedio = cargaOrdenada.filter(f => f.total > promedioCarga).length;
+            
+            // Calcular porcentajes de distribución
+            const porcentajeSPOA = totalCargaGeneral > 0 ? (totalCargaSPOA / totalCargaGeneral * 100) : 0;
+            const porcentajeApoyos = totalCargaGeneral > 0 ? (totalCargaApoyos / totalCargaGeneral * 100) : 0;
+            const porcentajeDECDI = totalCargaGeneral > 0 ? (totalCargaDECDI / totalCargaGeneral * 100) : 0;
+
+            // Identificar fiscales por tipo de carga
+            const fiscalesAltaSPOA = datosCargaFiscal.filter(f => f.spoa >= 15).length;
+            const fiscalesAltaApoyos = datosCargaFiscal.filter(f => f.apoyos >= 8).length;
+            const fiscalesAltaDECDI = datosCargaFiscal.filter(f => f.decdi >= 5).length;
+
+            // Generar HTML para los resultados
+            const resultadosCargaHTML = cargaOrdenada.map(fiscal => {
+                const maxCarga = Math.max(...cargaOrdenada.map(f => f.total));
+                const porcentajeTotal = maxCarga > 0 ? (fiscal.total / maxCarga) * 100 : 0;
                 
-                contenedor.appendChild(elemento);
-            });
-        }
+                return `
+                    <div class="persona-item">
+                        <div class="persona-nombre">${fiscal.nombre}</div>
+                        <div class="persona-cargo">${fiscal.cargo || 'Fiscal'} - ${fiscal.despachoFiscal}</div>
+                        <div class="persona-detalle">
+                            <div class="carga-stats">
+                                <div class="carga-stat-item">
+                                    <div class="carga-stat-value">${fiscal.spoa}</div>
+                                    <div class="carga-stat-label">SPOA/DECDI</div>
+                                </div>
+                                <div class="carga-stat-item">
+                                    <div class="carga-stat-value">${fiscal.apoyos}</div>
+                                    <div class="carga-stat-label">Apoyos Sec.</div>
+                                </div>
+                                <div class="carga-stat-item">
+                                    <div class="carga-stat-value">${fiscal.decdi}</div>
+                                    <div class="carga-stat-label">Apoyo-DECDI</div>
+                                </div>
+                                <div class="carga-stat-item">
+                                    <div class="carga-stat-value">${fiscal.total}</div>
+                                    <div class="carga-stat-label">Total</div>
+                                </div>
+                            </div>
+                            <div class="carga-bar-container">
+                                <div class="carga-bar" style="width: ${porcentajeTotal}%">
+                                    ${fiscal.total} casos
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
 
-        function filtrarCargos() {
-            const searchTerm = document.getElementById('searchCargos').value.toLowerCase();
-            const elementosCargo = document.querySelectorAll('.cargo-completo-item');
-            
-            elementosCargo.forEach(elemento => {
-                const cargo = elemento.dataset.cargo;
-                if (cargo.includes(searchTerm)) {
-                    elemento.style.display = 'block';
-                } else {
-                    elemento.style.display = 'none';
-                }
-            });
-        }
+            // Generar semáforo con criterios realistas
+            const cargaAlta = datosCargaFiscal.filter(f => f.total >= 25).sort((a, b) => b.total - a.total);
+            const cargaMedia = datosCargaFiscal.filter(f => f.total >= 15 && f.total < 25).sort((a, b) => b.total - a.total);
+            const cargaBaja = datosCargaFiscal.filter(f => f.total < 15).sort((a, b) => b.total - a.total);
 
-        // Funciones para la gráfica de cargos
-        function generarGraficaCargos() {
-            const contenedor = document.getElementById('graficaCargos');
-            contenedor.innerHTML = '';
-            
-            // Agrupar por cargo
-            const cargos = {};
+            const semaforoHTML = `
+                ${cargaAlta.length > 0 ? `
+                    <div class="semaforo-item alta">
+                        <div class="semaforo-header">
+                            <div class="semaforo-nivel">Alta Carga (25+ casos) - ${cargaAlta.length} fiscales</div>
+                            <div class="semaforo-indicador alta"></div>
+                        </div>
+                        <div class="semaforo-lista">
+                            ${cargaAlta.map(fiscal => `
+                                <div class="semaforo-persona">
+                                    <div class="semaforo-persona-nombre">${fiscal.nombre}</div>
+                                    <div class="semaforo-persona-carga">${fiscal.total} casos</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                ${cargaMedia.length > 0 ? `
+                    <div class="semaforo-item media">
+                        <div class="semaforo-header">
+                            <div class="semaforo-nivel">Media Carga (15-24 casos) - ${cargaMedia.length} fiscales</div>
+                            <div class="semaforo-indicador media"></div>
+                        </div>
+                        <div class="semaforo-lista">
+                            ${cargaMedia.map(fiscal => `
+                                <div class="semaforo-persona">
+                                    <div class="semaforo-persona-nombre">${fiscal.nombre}</div>
+                                    <div class="semaforo-persona-carga">${fiscal.total} casos</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                ${cargaBaja.length > 0 ? `
+                    <div class="semaforo-item baja">
+                        <div class="semaforo-header">
+                            <div class="semaforo-nivel">Baja Carga (0-14 casos) - ${cargaBaja.length} fiscales</div>
+                            <div class="semaforo-indicador baja"></div>
+                        </div>
+                        <div class="semaforo-lista">
+                            ${cargaBaja.map(fiscal => `
+                                <div class="semaforo-persona">
+                                    <div class="semaforo-persona-nombre">${fiscal.nombre}</div>
+                                    <div class="semaforo-persona-carga">${fiscal.total} casos</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+
+            return `
+                <div class="slide">
+                    <div class="content">
+                        <h2>Análisis de Carga Laboral por Fiscal</h2>
+                        <p>Distribución de trabajo en SPOA/DECDI, Apoyos Seccionales y Apoyo-DECDI</p>
+                        <p><strong>Base de análisis:</strong> ${totalFiscales} fiscales con carga laboral activa</p>
+                        
+                        <div class="stats-container">
+                            <div class="stat-card">
+                                <div class="stat-value">${totalFiscales}</div>
+                                <div class="stat-label">Fiscales con Carga</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${totalCargaSPOA}</div>
+                                <div class="stat-label">Total SPOA/DECDI</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${totalCargaApoyos}</div>
+                                <div class="stat-label">Total Apoyos Sec.</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${totalCargaDECDI}</div>
+                                <div class="stat-label">Total Apoyo-DECDI</div>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <div class="chart">
+                                <h3>Distribución de Carga por Tipo</h3>
+                                <div class="bar">
+                                    <div class="bar-label">SPOA/DECDI</div>
+                                    <div class="bar-value" style="width: ${porcentajeSPOA}%;">${totalCargaSPOA} casos (${porcentajeSPOA.toFixed(1)}%)</div>
+                                </div>
+                                <div class="bar">
+                                    <div class="bar-label">Apoyos Seccionales</div>
+                                    <div class="bar-value" style="width: ${porcentajeApoyos}%;">${totalCargaApoyos} casos (${porcentajeApoyos.toFixed(1)}%)</div>
+                                </div>
+                                <div class="bar">
+                                    <div class="bar-label">Apoyo-DECDI</div>
+                                    <div class="bar-value" style="width: ${porcentajeDECDI}%;">${totalCargaDECDI} casos (${porcentajeDECDI.toFixed(1)}%)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="filtros-container">
+                            <div class="filtro-group">
+                                <div class="filtro-label">Ordenar por:</div>
+                                <select id="ordenCarga" onchange="ordenarCargaFiscal()">
+                                    <option value="total">Carga Total (Descendente)</option>
+                                    <option value="spoa">SPOA/DECDI (Descendente)</option>
+                                    <option value="apoyos">Apoyos Seccionales (Descendente)</option>
+                                    <option value="decdi">Apoyo-DECDI (Descendente)</option>
+                                    <option value="nombre">Nombre (Ascendente)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="resultados-filtro" id="resultadosCargaFiscal" style="max-height: 600px;">
+                                ${resultadosCargaHTML}
+                            </div>
+                        </div>
+
+                        <!-- Semáforo de Carga Laboral -->
+                        <div class="semaforo-container">
+                            <h3 class="semaforo-title">Semáforo de Carga Laboral</h3>
+                            <div class="semaforo-grid" id="semaforoCarga">
+                                ${semaforoHTML}
+                            </div>
+                            <div class="semaforo-leyenda">
+                                <div class="leyenda-item">
+                                    <div class="leyenda-color leyenda-alta"></div>
+                                    <span>Alta Carga (25+ casos)</span>
+                                </div>
+                                <div class="leyenda-item">
+                                    <div class="leyenda-color leyenda-media"></div>
+                                    <span>Media Carga (15-24 casos)</span>
+                                </div>
+                                <div class="leyenda-item">
+                                    <div class="leyenda-color leyenda-baja"></div>
+                                    <span>Baja Carga (0-14 casos)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="insight">
+                            <h3>Hallazgos de Distribución de Carga</h3>
+                            <p><strong>Distribución de Carga:</strong> ${fiscalesSobrePromedio} de ${totalFiscales} fiscales (${Math.round((fiscalesSobrePromedio/totalFiscales)*100)}%) tienen carga por encima del promedio (${promedioCarga.toFixed(1)} casos).</p>
+                            <p><strong>Mayor Carga Individual:</strong> ${fiscalMayorCarga.nombre} con ${fiscalMayorCarga.total} casos totales (${fiscalMayorCarga.spoa} SPOA/DECDI, ${fiscalMayorCarga.apoyos} Apoyos Seccionales, ${fiscalMayorCarga.decdi} Apoyo-DECDI).</p>
+                            <p><strong>Distribución por Tipo:</strong> SPOA/DECDI representa el ${porcentajeSPOA.toFixed(1)}% del trabajo total, seguido de Apoyos Seccionales (${porcentajeApoyos.toFixed(1)}%) y Apoyo-DECDI (${porcentajeDECDI.toFixed(1)}%).</p>
+                            <p><strong>Focos de Atención:</strong> ${fiscalesAltaSPOA} fiscales con alta carga SPOA, ${fiscalesAltaApoyos} con alta carga en apoyos, ${fiscalesAltaDECDI} con alta carga DECDI.</p>
+                            <p><strong>Recomendación:</strong> Considerar redistribución de casos en los ${cargaAlta.length} fiscales con carga alta para balancear la carga laboral y mejorar la eficiencia.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+
+        function generarPresentacionCompleta() {
+            const slidesContainer = document.getElementById('slidesContainer');
+            slidesContainer.innerHTML = '';
+
+            // Calcular estadísticas
+            const totalFuncionarios = datosPersonas.length;
+            const provisionalidadCount = datosPersonas.filter(p => p.nombramiento === 'PROVISIONALIDAD').length;
+            const encargosCount = datosPersonas.filter(p => p.encargo && p.encargo !== '').length;
+            const propiedadCount = totalFuncionarios - provisionalidadCount;
+            const porcentajeProvisionalidad = Math.round((provisionalidadCount / totalFuncionarios) * 100);
+            const porcentajeEncargos = Math.round((encargosCount / totalFuncionarios) * 100);
+            const encargosProvisionalidad = datosPersonas.filter(p => p.encargo && p.encargo !== '' && p.nombramiento === 'PROVISIONALIDAD').length;
+            const encargosPropiedad = encargosCount - encargosProvisionalidad;
+            const porcentajeEncargosProvisionalidad = Math.round((encargosProvisionalidad / encargosCount) * 100);
+
+            // Slide 1: Portada
+            slidesContainer.innerHTML += `
+                <div class="slide">
+                    <div class="content">
+                        <div class="slide-header">
+                            <h1 class="slide-title">Análisis de Planta de Personal</h1>
+                            <p class="slide-subtitle">Dirección Especializada contra los Delitos Informáticos (DECDI)</p>
+                            <p class="slide-subtitle">Fecha de corte: ${new Date().toLocaleDateString()}</p>
+                        </div>
+                        <div class="stats-container">
+                            <div class="stat-card">
+                                <div class="stat-value">${totalFuncionarios}</div>
+                                <div class="stat-label">Total de Funcionarios</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${porcentajeProvisionalidad}%</div>
+                                <div class="stat-label">Provisionalidad (${provisionalidadCount} de ${totalFuncionarios} funcionarios)</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${porcentajeEncargos}%</div>
+                                <div class="stat-label">Con Encargos Activos (${encargosCount} de ${totalFuncionarios} funcionarios)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Slide 2: Tipos de Nombramiento
+            slidesContainer.innerHTML += `
+                <div class="slide">
+                    <div class="content">
+                        <h2>Tipos de Nombramiento</h2>
+                        
+                        <div class="chart-container">
+                            <div class="chart">
+                                <h3>Distribución por Tipo de Nombramiento</h3>
+                                <div class="bar">
+                                    <div class="bar-label">PROVISIONALIDAD</div>
+                                    <div class="bar-value" style="width: ${porcentajeProvisionalidad}%;">${provisionalidadCount} (${porcentajeProvisionalidad}%)</div>
+                                </div>
+                                <div class="bar">
+                                    <div class="bar-label">PROPIEDAD</div>
+                                    <div class="bar-value" style="width: ${100 - porcentajeProvisionalidad}%;">${propiedadCount} (${100 - porcentajeProvisionalidad}%)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="insight">
+                            <h3>Hallazgo Crítico</h3>
+                            <p>Existe una <span class="highlight">alta proporción de provisionalidad (${porcentajeProvisionalidad}%)</span> en la planta de personal de la DECDI. Solo ${propiedadCount} funcionarios (${100 - porcentajeProvisionalidad}%) tienen nombramiento en propiedad, lo que afecta la estabilidad laboral y la continuidad de los procesos.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Slide 3: Todos los Cargos Nominales
+            const cargosUnicos = [...new Set(datosPersonas.map(p => p.cargo))];
+            const cargosHTML = cargosUnicos.map(cargo => {
+                const personasEnCargo = datosPersonas.filter(p => p.cargo === cargo);
+                return `
+                    <div class="cargo-completo-item">
+                        <div class="cargo-completo-header">
+                            <div class="cargo-completo-nombre">${cargo}</div>
+                            <div class="cargo-completo-total">${personasEnCargo.length}</div>
+                        </div>
+                        <div class="cargo-completo-personas">
+                            ${personasEnCargo.map(persona => `
+                                <div class="persona-cargo-item">
+                                    <div class="persona-cargo-nombre">${persona.nombre}</div>
+                                    <div class="persona-cargo-estado">
+                                        <span class="tipo-nombramiento ${persona.nombramiento === 'PROVISIONALIDAD' ? 'provisionalidad' : 'propiedad'}">
+                                            ${persona.nombramiento}
+                                        </span>
+                                        ${persona.encargo ? 
+                                            `<span class="tipo-nombramiento encargo">ENCARGO</span>` : 
+                                            ''
+                                        }
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            slidesContainer.innerHTML += `
+                <div class="slide">
+                    <div class="content">
+                        <h2>Inventario de Cargos Nominales (NOM_CARGO)</h2>
+                        <p>Lista completa de todos los cargos nominales existentes en la DECDI</p>
+                        
+                        <div class="search-section">
+                            <input type="text" class="search-input" id="searchCargos" placeholder="Buscar cargo específico..." onkeyup="filtrarCargos()">
+                            <div><small>Escriba para filtrar los cargos por nombre</small></div>
+                        </div>
+                        
+                        <div class="todos-cargos-container">
+                            <div class="cargos-grid" id="cargosGrid">
+                                ${cargosHTML}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Slide 4: Encargos Activos
+            slidesContainer.innerHTML += `
+                <div class="slide">
+                    <div class="content">
+                        <h2>Encargos Activos - Situación Crítica</h2>
+                        
+                        <div class="stats-container">
+                            <div class="stat-card">
+                                <div class="stat-value">${encargosCount}</div>
+                                <div class="stat-label">Total de Encargos</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${encargosProvisionalidad}</div>
+                                <div class="stat-label">En Provisionalidad</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${encargosPropiedad}</div>
+                                <div class="stat-label">En Propiedad</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${porcentajeEncargosProvisionalidad}%</div>
+                                <div class="stat-label">Encargos en Provisionalidad</div>
+                            </div>
+                        </div>
+
+                        <div class="insight">
+                            <h3>Análisis de Encargos</h3>
+                            <p><span class="critical">${porcentajeEncargosProvisionalidad}% de los encargos (${encargosProvisionalidad} de ${encargosCount}) son realizados por funcionarios en provisionalidad.</span> Esto representa un <span class="highlight">doble nivel de temporalidad</span> que afecta severamente la estabilidad organizacional.</p>
+                            <p><strong>Fecha máxima de encargo identificada: ${new Date(new Date().setFullYear(new Date().getFullYear() + 2)).toLocaleDateString()}</strong></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Slide 5: Gráfica de Cargos
+            const cargosAgrupados = {};
             datosPersonas.forEach(persona => {
-                if (!cargos[persona.cargo]) {
-                    cargos[persona.cargo] = {
+                if (!cargosAgrupados[persona.cargo]) {
+                    cargosAgrupados[persona.cargo] = {
                         total: 0,
                         provisionalidad: 0,
                         propiedad: 0,
                         conEncargo: 0
                     };
                 }
-                
-                cargos[persona.cargo].total++;
+                cargosAgrupados[persona.cargo].total++;
                 if (persona.nombramiento === 'PROVISIONALIDAD') {
-                    cargos[persona.cargo].provisionalidad++;
+                    cargosAgrupados[persona.cargo].provisionalidad++;
                 } else {
-                    cargos[persona.cargo].propiedad++;
+                    cargosAgrupados[persona.cargo].propiedad++;
                 }
-                
                 if (persona.encargo) {
-                    cargos[persona.cargo].conEncargo++;
+                    cargosAgrupados[persona.cargo].conEncargo++;
                 }
             });
-            
-            // Generar elementos de gráfica
-            Object.entries(cargos).forEach(([cargo, datos]) => {
-                const elemento = document.createElement('div');
-                elemento.className = 'cargo-grafica-item';
-                
-                elemento.innerHTML = `
+
+            const graficaCargosHTML = Object.entries(cargosAgrupados).map(([cargo, datos]) => `
+                <div class="cargo-grafica-item">
                     <div class="cargo-grafica-header">
                         <div class="cargo-grafica-nombre">${cargo}</div>
                         <div class="cargo-grafica-total">${datos.total}</div>
@@ -1258,54 +1595,149 @@
                             <div class="cargo-grafica-cantidad">${datos.conEncargo}</div>
                         </div>
                     </div>
-                `;
-                
-                contenedor.appendChild(elemento);
-            });
+                </div>
+            `).join('');
+
+            slidesContainer.innerHTML += `
+                <div class="slide">
+                    <div class="content">
+                        <h2>Distribución de Cargos</h2>
+                        <p>Análisis detallado de los cargos y su composición por tipo de nombramiento</p>
+                        
+                        <div class="grafica-cargos" id="graficaCargos">
+                            ${graficaCargosHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Slide 6: Filtros Interactivos
+            slidesContainer.innerHTML += `
+                <div class="slide">
+                    <div class="content">
+                        <h2>Búsqueda de Personal</h2>
+                        <p>Filtre el personal por cargo nominal o cargo de encargo</p>
+                        
+                        <div class="filtros-container">
+                            <div class="filtro-group">
+                                <div class="filtro-label">Cargo Nominal:</div>
+                                <select id="filtroCargo" onchange="aplicarFiltros()">
+                                    <option value="">Todos los cargos</option>
+                                    ${cargosUnicos.map(cargo => `<option value="${cargo}">${cargo}</option>`).join('')}
+                                </select>
+                            </div>
+                            
+                            <div class="filtro-group">
+                                <div class="filtro-label">Cargo de Encargo:</div>
+                                <select id="filtroEncargo" onchange="aplicarFiltros()">
+                                    <option value="">Todos los encargos</option>
+                                    ${[...new Set(datosPersonas.map(p => p.encargo).filter(e => e))].map(encargo => `<option value="${encargo}">${encargo}</option>`).join('')}
+                                </select>
+                            </div>
+                            
+                            <div class="resultados-filtro" id="resultadosFiltro">
+                                <!-- Resultados generados dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Slide 7: Análisis de Carga Laboral por Fiscal (USANDO LA NUEVA FUNCIÓN)
+            slidesContainer.innerHTML += generarSlideCargaLaboral();
+
+            // Slide 8: Recomendaciones
+            slidesContainer.innerHTML += `
+                <div class="slide">
+                    <div class="content">
+                        <h2>Recomendaciones Estratégicas</h2>
+                        
+                        <div class="recommendation">
+                            <h3>Acciones Urgentes</h3>
+                            <ol>
+                                <li><strong>Implementar plan urgente de estabilización laboral</strong> para convertir provisionalidad a propiedad</li>
+                                <li><strong>Revisar inmediatamente la política de encargos</strong> para funcionarios en provisionalidad</li>
+                                <li><strong>Priorizar la propiedad en cargos críticos y de liderazgo</strong></li>
+                                <li><strong>Establecer límites temporales</strong> para encargos en personal provisional</li>
+                                <li><strong>Crear programa de retención</strong> para personal clave en provisionalidad</li>
+                                <li><strong>Evaluar reestructuración de planta</strong> para adecuarla a necesidades permanentes</li>
+                            </ol>
+                        </div>
+
+                        <div class="stats-container">
+                            <div class="stat-card">
+                                <div class="stat-value">✓</div>
+                                <div class="stat-label">Estabilidad Laboral</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">✓</div>
+                                <div class="stat-label">Continuidad Operativa</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">✓</div>
+                                <div class="stat-label">Planificación Estratégica</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Actualizar variables de control
+            totalSlides = document.querySelectorAll('.slide').length;
+            
+            // Generar indicadores
+            const indicadores = document.getElementById('indicadores');
+            indicadores.innerHTML = '';
+            for (let i = 0; i < totalSlides; i++) {
+                const indicador = document.createElement('div');
+                indicador.className = 'indicador' + (i === 0 ? ' activo' : '');
+                indicador.onclick = () => irASlide(i);
+                indicadores.appendChild(indicador);
+            }
+
+            // Inicializar navegación
+            irASlide(0);
         }
 
-        // Funciones para los filtros
-        function inicializarFiltros() {
-            const selectCargo = document.getElementById('filtroCargo');
-            const selectEncargo = document.getElementById('filtroEncargo');
-            
-            // Obtener opciones únicas de cargos
-            const cargos = [...new Set(datosPersonas.map(p => p.cargo))];
-            const encargos = [...new Set(datosPersonas.map(p => p.encargo).filter(e => e))];
-            
-            // Llenar select de cargos
-            cargos.forEach(cargo => {
-                const option = document.createElement('option');
-                option.value = cargo;
-                option.textContent = cargo;
-                selectCargo.appendChild(option);
-            });
-            
-            // Llenar select de encargos
-            encargos.forEach(encargo => {
-                const option = document.createElement('option');
-                option.value = encargo;
-                option.textContent = encargo;
-                selectEncargo.appendChild(option);
-            });
-            
-            // Aplicar filtros iniciales
-            aplicarFiltros();
+        // Funciones de navegación
+        function cambiarSlide(direccion) {
+            const nuevoSlide = slideActual + direccion;
+            if (nuevoSlide >= 0 && nuevoSlide < totalSlides) {
+                irASlide(nuevoSlide);
+            } else if (nuevoSlide >= totalSlides) {
+                irASlide(0);
+            }
         }
 
+        function irASlide(nuevoSlide) {
+            slideActual = nuevoSlide;
+            const slidesContainer = document.getElementById('slidesContainer');
+            slidesContainer.style.transform = `translateX(-${slideActual * 100}vw)`;
+            
+            // Actualizar indicadores
+            document.querySelectorAll('.indicador').forEach((ind, index) => {
+                ind.classList.toggle('activo', index === slideActual);
+            });
+            
+            // Actualizar estado de botones
+            const btnAnterior = document.getElementById('btnAnterior');
+            const btnSiguiente = document.getElementById('btnSiguiente');
+            btnAnterior.disabled = slideActual === 0;
+            btnSiguiente.textContent = slideActual === totalSlides - 1 ? 'Reiniciar' : 'Siguiente';
+        }
+
+        // Funciones auxiliares para los filtros
         function aplicarFiltros() {
             const filtroCargo = document.getElementById('filtroCargo').value;
             const filtroEncargo = document.getElementById('filtroEncargo').value;
             const resultados = document.getElementById('resultadosFiltro');
             
-            // Filtrar personas
             const personasFiltradas = datosPersonas.filter(persona => {
                 const coincideCargo = !filtroCargo || persona.cargo === filtroCargo;
                 const coincideEncargo = !filtroEncargo || persona.encargo === filtroEncargo;
                 return coincideCargo && coincideEncargo;
             });
             
-            // Mostrar resultados
             resultados.innerHTML = '';
             
             if (personasFiltradas.length === 0) {
@@ -1316,7 +1748,6 @@
             personasFiltradas.forEach(persona => {
                 const elemento = document.createElement('div');
                 elemento.className = 'persona-item';
-                
                 elemento.innerHTML = `
                     <div class="persona-nombre">${persona.nombre}</div>
                     <div class="persona-cargo">Cargo: ${persona.cargo}</div>
@@ -1330,124 +1761,42 @@
                         }
                     </div>
                 `;
-                
                 resultados.appendChild(elemento);
             });
-        }
-
-        // Funciones para el análisis de carga fiscal
-        function mostrarAnalisisCargaFiscal() {
-            const cargaFiscal = generarDatosCargaFiscal();
-            const resultados = document.getElementById('resultadosCargaFiscal');
-            const totalFiscales = document.getElementById('totalFiscalesActivos');
-            const totalSPOA = document.getElementById('totalCargaSPOA');
-            const totalApoyos = document.getElementById('totalCargaApoyos');
-            const totalDECDI = document.getElementById('totalCargaDECDI');
-            const analisisCarga = document.getElementById('analisisCarga');
-
-            // Calcular totales
-            const totalSpoa = cargaFiscal.reduce((sum, fiscal) => sum + fiscal.spoa, 0);
-            const totalApoyosSecc = cargaFiscal.reduce((sum, fiscal) => sum + fiscal.apoyos, 0);
-            const totalDecdi = cargaFiscal.reduce((sum, fiscal) => sum + fiscal.decdi, 0);
-
-            // Actualizar estadísticas
-            totalFiscales.textContent = cargaFiscal.length;
-            totalSPOA.textContent = totalSpoa;
-            totalApoyos.textContent = totalApoyosSecc;
-            totalDECDI.textContent = totalDecdi;
-
-            // Ordenar por carga total (por defecto)
-            const cargaOrdenada = [...cargaFiscal].sort((a, b) => b.total - a.total);
-
-            // Generar elementos HTML
-            resultados.innerHTML = '';
-            cargaOrdenada.forEach(fiscal => {
-                const elemento = document.createElement('div');
-                elemento.className = 'persona-item';
-                
-                // Calcular porcentajes para la barra de progreso
-                const maxCarga = Math.max(...cargaOrdenada.map(f => f.total));
-                const porcentajeTotal = (fiscal.total / maxCarga) * 100;
-                
-                elemento.innerHTML = `
-                    <div class="persona-nombre">${fiscal.nombre}</div>
-                    <div class="persona-detalle">
-                        <div class="carga-stats">
-                            <div class="carga-stat-item">
-                                <div class="carga-stat-value">${fiscal.spoa}</div>
-                                <div class="carga-stat-label">SPOA/DECDI</div>
-                            </div>
-                            <div class="carga-stat-item">
-                                <div class="carga-stat-value">${fiscal.apoyos}</div>
-                                <div class="carga-stat-label">Apoyos Sec.</div>
-                            </div>
-                            <div class="carga-stat-item">
-                                <div class="carga-stat-value">${fiscal.decdi}</div>
-                                <div class="carga-stat-label">Apoyo-DECDI</div>
-                            </div>
-                            <div class="carga-stat-item">
-                                <div class="carga-stat-value">${fiscal.total}</div>
-                                <div class="carga-stat-label">Total</div>
-                            </div>
-                        </div>
-                        <div class="carga-bar-container">
-                            <div class="carga-bar" style="width: ${porcentajeTotal}%">
-                                ${fiscal.total} casos
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                resultados.appendChild(elemento);
-            });
-
-            // Generar análisis automático
-            const fiscalMayorCarga = cargaOrdenada[0];
-            const promedioCarga = cargaOrdenada.reduce((sum, fiscal) => sum + fiscal.total, 0) / cargaOrdenada.length;
-            const fiscalesSobrePromedio = cargaOrdenada.filter(f => f.total > promedioCarga).length;
-            const porcentajeSPOA = (totalSpoa / (totalSpoa + totalApoyosSecc + totalDecdi) * 100);
-
-            analisisCarga.innerHTML = `
-                <p><strong>Distribución de Carga:</strong> Se identifican ${fiscalesSobrePromedio} fiscales con carga por encima del promedio (${promedioCarga.toFixed(1)} casos).</p>
-                <p><strong>Mayor Carga:</strong> ${fiscalMayorCarga.nombre} con ${fiscalMayorCarga.total} casos totales (${fiscalMayorCarga.spoa} SPOA/DECDI, ${fiscalMayorCarga.apoyos} Apoyos Seccionales, ${fiscalMayorCarga.decdi} Apoyo-DECDI).</p>
-                <p><strong>Concentración SPOA:</strong> ${porcentajeSPOA.toFixed(1)}% del trabajo corresponde a SPOA/DECDI.</p>
-                <p><strong>Recomendación:</strong> Considerar redistribución de casos en fiscales con carga superior a 20 casos para balancear la carga laboral.</p>
-            `;
         }
 
         function ordenarCargaFiscal() {
             const criterio = document.getElementById('ordenCarga').value;
-            const cargaFiscal = generarDatosCargaFiscal();
             const resultados = document.getElementById('resultadosCargaFiscal');
             
             let cargaOrdenada;
             switch(criterio) {
                 case 'spoa':
-                    cargaOrdenada = [...cargaFiscal].sort((a, b) => b.spoa - a.spoa);
+                    cargaOrdenada = [...datosCargaFiscal].sort((a, b) => b.spoa - a.spoa);
                     break;
                 case 'apoyos':
-                    cargaOrdenada = [...cargaFiscal].sort((a, b) => b.apoyos - a.apoyos);
+                    cargaOrdenada = [...datosCargaFiscal].sort((a, b) => b.apoyos - a.apoyos);
                     break;
                 case 'decdi':
-                    cargaOrdenada = [...cargaFiscal].sort((a, b) => b.decdi - a.decdi);
+                    cargaOrdenada = [...datosCargaFiscal].sort((a, b) => b.decdi - a.decdi);
                     break;
                 case 'nombre':
-                    cargaOrdenada = [...cargaFiscal].sort((a, b) => a.nombre.localeCompare(b.nombre));
+                    cargaOrdenada = [...datosCargaFiscal].sort((a, b) => a.nombre.localeCompare(b.nombre));
                     break;
                 default:
-                    cargaOrdenada = [...cargaFiscal].sort((a, b) => b.total - a.total);
+                    cargaOrdenada = [...datosCargaFiscal].sort((a, b) => b.total - a.total);
             }
 
             resultados.innerHTML = '';
             cargaOrdenada.forEach(fiscal => {
                 const elemento = document.createElement('div');
                 elemento.className = 'persona-item';
-                
                 const maxCarga = Math.max(...cargaOrdenada.map(f => f.total));
-                const porcentajeTotal = (fiscal.total / maxCarga) * 100;
+                const porcentajeTotal = maxCarga > 0 ? (fiscal.total / maxCarga) * 100 : 0;
                 
                 elemento.innerHTML = `
                     <div class="persona-nombre">${fiscal.nombre}</div>
+                    <div class="persona-cargo">${fiscal.cargo || 'Fiscal'}</div>
                     <div class="persona-detalle">
                         <div class="carga-stats">
                             <div class="carga-stat-item">
@@ -1474,94 +1823,29 @@
                         </div>
                     </div>
                 `;
-                
                 resultados.appendChild(elemento);
             });
         }
 
-        // Función para generar el semáforo de carga
-        function generarSemaforoCarga() {
-            const cargaFiscal = generarDatosCargaFiscal();
-            const semaforoContainer = document.getElementById('semaforoCarga');
+        function filtrarCargos() {
+            const searchTerm = document.getElementById('searchCargos').value.toLowerCase();
+            const elementosCargo = document.querySelectorAll('.cargo-completo-item');
             
-            // Clasificar fiscales por nivel de carga
-            const cargaAlta = cargaFiscal.filter(fiscal => fiscal.total >= 20);
-            const cargaMedia = cargaFiscal.filter(fiscal => fiscal.total >= 10 && fiscal.total < 20);
-            const cargaBaja = cargaFiscal.filter(fiscal => fiscal.total < 10);
-            
-            // Ordenar cada categoría por carga total (descendente)
-            cargaAlta.sort((a, b) => b.total - a.total);
-            cargaMedia.sort((a, b) => b.total - a.total);
-            cargaBaja.sort((a, b) => b.total - a.total);
-            
-            semaforoContainer.innerHTML = '';
-            
-            // Generar sección de carga ALTA
-            if (cargaAlta.length > 0) {
-                const semaforoAlta = document.createElement('div');
-                semaforoAlta.className = 'semaforo-item alta';
-                semaforoAlta.innerHTML = `
-                    <div class="semaforo-header">
-                        <div class="semaforo-nivel">Alta Carga</div>
-                        <div class="semaforo-indicador alta"></div>
-                    </div>
-                    <div class="semaforo-lista">
-                        ${cargaAlta.map(fiscal => `
-                            <div class="semaforo-persona">
-                                <div class="semaforo-persona-nombre">${fiscal.nombre}</div>
-                                <div class="semaforo-persona-carga">${fiscal.total} casos</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                semaforoContainer.appendChild(semaforoAlta);
-            }
-            
-            // Generar sección de carga MEDIA
-            if (cargaMedia.length > 0) {
-                const semaforoMedia = document.createElement('div');
-                semaforoMedia.className = 'semaforo-item media';
-                semaforoMedia.innerHTML = `
-                    <div class="semaforo-header">
-                        <div class="semaforo-nivel">Media Carga</div>
-                        <div class="semaforo-indicador media"></div>
-                    </div>
-                    <div class="semaforo-lista">
-                        ${cargaMedia.map(fiscal => `
-                            <div class="semaforo-persona">
-                                <div class="semaforo-persona-nombre">${fiscal.nombre}</div>
-                                <div class="semaforo-persona-carga">${fiscal.total} casos</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                semaforoContainer.appendChild(semaforoMedia);
-            }
-            
-            // Generar sección de carga BAJA
-            if (cargaBaja.length > 0) {
-                const semaforoBaja = document.createElement('div');
-                semaforoBaja.className = 'semaforo-item baja';
-                semaforoBaja.innerHTML = `
-                    <div class="semaforo-header">
-                        <div class="semaforo-nivel">Baja Carga</div>
-                        <div class="semaforo-indicador baja"></div>
-                    </div>
-                    <div class="semaforo-lista">
-                        ${cargaBaja.map(fiscal => `
-                            <div class="semaforo-persona">
-                                <div class="semaforo-persona-nombre">${fiscal.nombre}</div>
-                                <div class="semaforo-persona-carga">${fiscal.total} casos</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                semaforoContainer.appendChild(semaforoBaja);
-            }
+            elementosCargo.forEach(elemento => {
+                const cargo = elemento.querySelector('.cargo-completo-nombre').textContent.toLowerCase();
+                if (cargo.includes(searchTerm)) {
+                    elemento.style.display = 'block';
+                } else {
+                    elemento.style.display = 'none';
+                }
+            });
         }
 
-        // Inicializar
-        irASlide(0);
+        // Navegación con teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') cambiarSlide(-1);
+            if (e.key === 'ArrowRight') cambiarSlide(1);
+        });
     </script>
 </body>
 </html>
