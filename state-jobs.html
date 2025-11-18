@@ -940,149 +940,6 @@
                 // Obtener encabezados
                 const encabezados = lineas[0].split(',').map(h => h.trim().replace(/"/g, ''));
                 
-                // Verificar encabezados requeridos mínimos
-                const encabezadosRequeridos = ['NUM_DOCUMENTO', 'NOM_APELLIDOS', 'NOM_TIP_NOMBRAMIENTO', 'NOM_CARGO'];
-                const encabezadosFaltantes = encabezadosRequeridos.filter(h => !encabezados.includes(h));
-                
-                if (encabezadosFaltantes.length > 0) {
-                    mostrarError(`Faltan columnas requeridas: ${encabezadosFaltantes.join(', ')}`);
-                    return;
-                }
-
-                // Procesar datos
-                datosPersonas = [];
-                for (let i = 1; i < lineas.length; i++) {
-                    if (lineas[i].trim() === '') continue;
-                    
-                    const valores = parseCSVLine(lineas[i]);
-                    if (valores.length === encabezados.length) {
-                        const persona = {};
-                        encabezados.forEach((encabezado, index) => {
-                            persona[encabezado] = valores[index] || '';
-                        });
-                        
-                        // Mapear a la estructura esperada
-                        const datosPersona = {
-                            nombre: persona.NOM_APELLIDOS,
-                            cargo: persona.NOM_CARGO,
-                            nombramiento: persona.NOM_TIP_NOMBRAMIENTO
-                        };
-
-                        // Agregar encargo si existe la columna
-                        if (encabezados.includes('NOM_CAR_ENCARGO')) {
-                            datosPersona.encargo = persona.NOM_CAR_ENCARGO;
-                        }
-
-                        // Agregar datos de carga si existen
-                        if (encabezados.includes('SPOA/DECDI')) {
-                            datosPersona.spoa = parseInt(persona['SPOA/DECDI']) || 0;
-                        }
-                        if (encabezados.includes('APOYOS SECCIONAL')) {
-                            datosPersona.apoyos = parseInt(persona['APOYOS SECCIONAL']) || 0;
-                        }
-                        if (encabezados.includes('APOYO-DECDI')) {
-                            datosPersona.decdi = parseInt(persona['APOYO-DECDI']) || 0;
-                        }
-
-                        datosPersonas.push(datosPersona);
-                    }
-                }
-
-                if (datosPersonas.length === 0) {
-                    mostrarError('No se pudieron procesar datos del archivo CSV');
-                    return;
-                }
-
-                // Generar datos de carga fiscal
-                generarDatosCargaFiscalDesdeCSV();
-                
-                mostrarExito();
-                
-                // Esperar un momento y luego generar la presentación
-                setTimeout(() => {
-                    csvUploadContainer.style.display = 'none';
-                    presentationContainer.style.display = 'block';
-                    generarPresentacionCompleta();
-                }, 1000);
-
-            } catch (error) {
-                mostrarError('Error al procesar el CSV: ' + error.message);
-            }
-        }
-
-        function parseCSVLine(line) {
-            const resultado = [];
-            let campoActual = '';
-            let entreComillas = false;
-            
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                
-                if (char === '"') {
-                    entreComillas = !entreComillas;
-                } else if (char === ',' && !entreComillas) {
-                    resultado.push(campoActual.trim());
-                    campoActual = '';
-                } else {
-                    campoActual += char;
-                }
-            }
-            
-            resultado.push(campoActual.trim());
-            return resultado.map(campo => campo.replace(/^"|"$/g, ''));
-        }
-        // REEMPLAZAR la función generarDatosCargaFiscalDesdeCSV con esta versión
-        function generarDatosCargaFiscalDesdeCSV() {
-            // Filtrar solo fiscales (excluyendo "NO ES FISCAL")
-            const fiscales = datosPersonas.filter(persona => {
-                // Verificar que tenga despacho fiscal y NO sea "NO ES FISCAL"
-                const esFiscal = persona.despachoFiscal && 
-                                persona.despachoFiscal !== "NO ES FISCAL" &&
-                                persona.despachoFiscal !== "" &&
-                                persona.despachoFiscal !== null &&
-                                persona.despachoFiscal !== undefined;
-                
-                return esFiscal;
-            });
-
-            console.log(`Fiscales identificados: ${fiscales.length} de ${datosPersonas.length} registros totales`);
-
-            // Procesar solo los fiscales que tienen datos de carga en el CSV
-            datosCargaFiscal = fiscales.map((fiscal, index) => {
-                // Convertir los datos de carga a números
-                const spoa = parseInt(fiscal.spoa) || 0;
-                const apoyos = parseInt(fiscal.apoyos) || 0;
-                const decdi = parseInt(fiscal.decdi) || 0;
-                const total = spoa + apoyos + decdi;
-                
-                return {
-                    nombre: fiscal.nombre.toUpperCase(),
-                    spoa: spoa,
-                    apoyos: apoyos,
-                    decdi: decdi,
-                    total: total,
-                    despachoFiscal: fiscal.despachoFiscal,
-                    cargo: fiscal.cargo,
-                    nombramiento: fiscal.nombramiento,
-                    tieneDatosReales: (spoa > 0 || apoyos > 0 || decdi > 0)
-                };
-            }).filter(fiscal => fiscal.tieneDatosReales); // Solo incluir fiscales con carga real
-
-            console.log(`Fiscales con carga laboral: ${datosCargaFiscal.length}`);
-        }
-
-        // ACTUALIZAR la función procesarCSV para incluir mejor manejo de columnas
-        function procesarCSV(csvData) {
-            try {
-                const lineas = csvData.split('\n');
-                if (lineas.length < 2) {
-                    mostrarError('El archivo CSV está vacío o no tiene datos');
-                    return;
-                }
-
-                // Obtener encabezados
-                const encabezados = lineas[0].split(',').map(h => h.trim().replace(/"/g, ''));
-                
                 // Verificar encabezados requeridos
                 const encabezadosRequeridos = ['NUM_DOCUMENTO', 'NOM_APELLIDOS', 'NOM_TIP_NOMBRAMIENTO', 'NOM_CARGO', 'NOM_CAR_ENCARGO'];
                 const encabezadosFaltantes = encabezadosRequeridos.filter(h => !encabezados.includes(h));
@@ -1164,7 +1021,67 @@
             }
         }
 
-        // ACTUALIZAR la función generarSlideCargaLaboral
+        function parseCSVLine(line) {
+            const resultado = [];
+            let campoActual = '';
+            let entreComillas = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    entreComillas = !entreComillas;
+                } else if (char === ',' && !entreComillas) {
+                    resultado.push(campoActual.trim());
+                    campoActual = '';
+                } else {
+                    campoActual += char;
+                }
+            }
+            
+            resultado.push(campoActual.trim());
+            return resultado.map(campo => campo.replace(/^"|"$/g, ''));
+        }
+
+        function generarDatosCargaFiscalDesdeCSV() {
+            // Filtrar solo fiscales (excluyendo "NO ES FISCAL")
+            const fiscales = datosPersonas.filter(persona => {
+                const esFiscal = persona.despachoFiscal && 
+                                persona.despachoFiscal !== "NO ES FISCAL" &&
+                                persona.despachoFiscal !== "" &&
+                                persona.despachoFiscal !== null &&
+                                persona.despachoFiscal !== undefined;
+                return esFiscal;
+            });
+
+            console.log(`Fiscales identificados: ${fiscales.length} de ${datosPersonas.length} registros totales`);
+
+            // Procesar TODOS los fiscales, no filtrar por "tieneDatosReales"
+            datosCargaFiscal = fiscales.map((fiscal, index) => {
+                // Convertir los datos de carga a números (manejar valores vacíos, nulos o no numéricos)
+                const spoa = fiscal.spoa !== undefined && fiscal.spoa !== null && fiscal.spoa !== '' && !isNaN(parseInt(fiscal.spoa)) ? parseInt(fiscal.spoa) : 0;
+                const apoyos = fiscal.apoyos !== undefined && fiscal.apoyos !== null && fiscal.apoyos !== '' && !isNaN(parseInt(fiscal.apoyos)) ? parseInt(fiscal.apoyos) : 0;
+                const decdi = fiscal.decdi !== undefined && fiscal.decdi !== null && fiscal.decdi !== '' && !isNaN(parseInt(fiscal.decdi)) ? parseInt(fiscal.decdi) : 0;
+                const total = spoa + apoyos + decdi;
+                
+                return {
+                    nombre: fiscal.nombre.toUpperCase(),
+                    spoa: spoa,
+                    apoyos: apoyos,
+                    decdi: decdi,
+                    total: total,
+                    despachoFiscal: fiscal.despachoFiscal,
+                    cargo: fiscal.cargo,
+                    nombramiento: fiscal.nombramiento
+                };
+            });
+
+            console.log(`Fiscales procesados: ${datosCargaFiscal.length}`);
+            
+            // Debug: mostrar todos los fiscales para verificar
+            console.log('Todos los fiscales procesados:', datosCargaFiscal);
+        }
+
         function generarSlideCargaLaboral() {
             // Filtrar solo fiscales para las estadísticas
             const totalFiscales = datosCargaFiscal.length;
@@ -1210,8 +1127,12 @@
 
             // Generar HTML para los resultados
             const resultadosCargaHTML = cargaOrdenada.map(fiscal => {
-                const maxCarga = Math.max(...cargaOrdenada.map(f => f.total));
-                const porcentajeTotal = maxCarga > 0 ? (fiscal.total / maxCarga) * 100 : 0;
+                // Calcular el máximo de carga, asegurando que sea al menos 1 para evitar división por cero
+                const maxCarga = Math.max(1, ...cargaOrdenada.map(f => f.total));
+                const porcentajeTotal = (fiscal.total / maxCarga) * 100;
+                
+                // Asegurar que la barra tenga un ancho mínimo para mostrar el texto
+                const anchoBarra = Math.max(porcentajeTotal, 15); // Mínimo 15% para que se vea el texto
                 
                 return `
                     <div class="persona-item">
@@ -1237,7 +1158,7 @@
                                 </div>
                             </div>
                             <div class="carga-bar-container">
-                                <div class="carga-bar" style="width: ${porcentajeTotal}%">
+                                <div class="carga-bar" style="width: ${anchoBarra}%">
                                     ${fiscal.total} casos
                                 </div>
                             </div>
@@ -1246,7 +1167,7 @@
                 `;
             }).join('');
 
-            // Generar semáforo con criterios realistas
+            // Generar semáforo con criterios realistas ORDENADO DE MAYOR A MENOR
             const cargaAlta = datosCargaFiscal.filter(f => f.total >= 25).sort((a, b) => b.total - a.total);
             const cargaMedia = datosCargaFiscal.filter(f => f.total >= 15 && f.total < 25).sort((a, b) => b.total - a.total);
             const cargaBaja = datosCargaFiscal.filter(f => f.total < 15).sort((a, b) => b.total - a.total);
@@ -1397,7 +1318,6 @@
                 </div>
             `;
         }
-        
 
         function generarPresentacionCompleta() {
             const slidesContainer = document.getElementById('slidesContainer');
@@ -1791,12 +1711,13 @@
             cargaOrdenada.forEach(fiscal => {
                 const elemento = document.createElement('div');
                 elemento.className = 'persona-item';
-                const maxCarga = Math.max(...cargaOrdenada.map(f => f.total));
-                const porcentajeTotal = maxCarga > 0 ? (fiscal.total / maxCarga) * 100 : 0;
+                const maxCarga = Math.max(1, ...cargaOrdenada.map(f => f.total));
+                const porcentajeTotal = (fiscal.total / maxCarga) * 100;
+                const anchoBarra = Math.max(porcentajeTotal, 15);
                 
                 elemento.innerHTML = `
                     <div class="persona-nombre">${fiscal.nombre}</div>
-                    <div class="persona-cargo">${fiscal.cargo || 'Fiscal'}</div>
+                    <div class="persona-cargo">${fiscal.cargo || 'Fiscal'} - ${fiscal.despachoFiscal}</div>
                     <div class="persona-detalle">
                         <div class="carga-stats">
                             <div class="carga-stat-item">
@@ -1817,7 +1738,7 @@
                             </div>
                         </div>
                         <div class="carga-bar-container">
-                            <div class="carga-bar" style="width: ${porcentajeTotal}%">
+                            <div class="carga-bar" style="width: ${anchoBarra}%">
                                 ${fiscal.total} casos
                             </div>
                         </div>
